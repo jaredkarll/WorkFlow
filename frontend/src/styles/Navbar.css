@@ -1,0 +1,138 @@
+.navbar {
+  width: 100%;
+  height: 100px;
+  background-color: #e7e7e7;
+  display: flex;
+  flex-direction: row;
+  box-shadow: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.navbar .leftSide {
+  flex: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 150px;
+}
+
+.navbar .leftSide img {
+  width: 200px;
+}
+
+.navbar .rightSide {
+  flex: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar a {
+  color: rgb(22, 22, 22);
+  text-decoration: none;
+  font-weight: bold;
+  margin: 20px;
+}
+
+.navbar .rightSide button {
+  background-color: transparent;
+  border: none;
+  color: rgb(22, 22, 22);
+  cursor: pointer;
+}
+
+.navbar .rightSide svg {
+  font-size: 40px;
+}
+
+.navbar #open {
+  padding-left: 0px;
+}
+.navbar #open img {
+  display: none;
+}
+
+.navbar #close img {
+  display: inherit;
+}
+
+.navbar #open .hiddenLinks {
+  display: inherit;
+  margin-left: 30px;
+}
+
+.navbar #close .hiddenLinks {
+  display: none;
+}
+
+.navbar #open a {
+  width: 70px;
+  margin: 5px;
+}
+
+.navbar .rightSide .signupButton {
+  display: inline-block !important;
+  width: auto;
+  background-color: #022B60;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+}
+
+.navbar .rightSide .signupButton:hover {
+  background-color: transparent;
+  border-color: #022B60;
+  color: #FF9202;
+}
+
+.navbar .rightSide .loggedInButton {
+  display: inline-block !important;
+  width: auto;
+  border-radius: 10px;
+  border-color: #FF9202;
+  color: #022B60;
+  text-align: center;
+  padding: 10px 20px;
+}
+
+.navbar .rightSide .loggedInButton:hover {
+  border-color: #022B60;
+  color: #FF9202;
+}
+
+
+
+@media only screen and (max-width: 900px) {
+  .navbar .rightSide a {
+    width: 70px;
+  }
+  .navbar .leftSide {
+    padding-left: 50px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .navbar .rightSide a {
+    display: none;
+  }
+
+  .navbar .rightSide {
+    justify-content: flex-end;
+    padding-right: 50px;
+  }
+
+  .navbar .rightSide button {
+    display: inherit;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .navbar .rightSide button {
+    display: none;
+  }
+
+  .hiddenLinks {
+    display: none;
+  }
+}
