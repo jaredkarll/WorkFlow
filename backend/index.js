@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3306, //Change depending on port used
+    port: 3600, //Change depending on port used
     user: 'root',
     password: '',
     database: 'workflow'

@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import "./App.css";
+
+// import Menu from "./pages/Menu";
+// import About from "./pages/About";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-// import Menu from "./pages/Menu";
-// import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -14,6 +15,9 @@ import ViewDetailedReport from "./pages/ReportDetails";
 import ForgotPassword from "./pages/ForgotPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminReportDispatch from "./pages/AdminReportDispatch";
+import SideMenu from "./components/SideMenu"; 
+
+
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 export const AuthContext = React.createContext();
@@ -34,9 +38,10 @@ function App() {
             <Route path="/forgotpassword" exact component={ForgotPassword} />
 
             {/* User Side */}
-            <Route path="/report" exact component={UserSubmitReport} />
-            <Route path="/userdash" exact component={UserDashboard} />
-            <Route path="/report/:id" exact component={ViewDetailedReport} />
+            <SideMenu />
+              <Route path="/report" exact component={UserSubmitReport} />
+              <Route path="/userdash" exact component={UserDashboard} />
+              <Route path="/report/:id" exact component={ViewDetailedReport} />
 
             {/* Admin Side */}
             <Route path="/admindash" exact component={AdminDashboard} />

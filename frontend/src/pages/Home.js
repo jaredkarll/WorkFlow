@@ -1,6 +1,6 @@
 import React from "react";
 //import { Link } from "react-router-dom";
-import BannerImage from "../assets/home-background.jpg";
+import BannerImage from "../assets/workflow-homepage.jpg";
 import "../styles/Home.css";
 
 
@@ -11,8 +11,8 @@ function Home() {
       <div className="overlay"></div>
       <div className="home" style={{ backgroundImage: `url(${BannerImage})` }}>
         <div className="headerContainer">
-          <h1> Empowering Communities. </h1>
-          <h1>Empowering Safety.</h1>
+          <h1> Streamline Your Success, </h1>
+          <h1> One Task at a Time.</h1>
           {/* <Link to="/menu">
             <button> ORDER NOW </button>
           </Link> */}

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../App";
-import Logo from "../assets/WorkFlow Logo.svg";
+import Logo from "../assets/WorkFlow Logo-2.svg";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import ReorderIcon from "@material-ui/icons/Reorder";
 import "../styles/Navbar.css";
@@ -21,7 +21,7 @@ function Navbar() {
       setIsLoggedIn(false);
       history.push("/");
     } else {
-      history.push(location.pathname === "/signup" ? "/login" : "/signup");
+      history.push(location.pathname === "/login" ? "/signup" : "/login");
     }
   };
 
@@ -31,21 +31,23 @@ function Navbar() {
         <img src={Logo} alt="SafeZone Logo" />
         <div className="hiddenLinks">
           <Link to="/"> Home </Link>
-          {/* <Link to="/menu"> Menu </Link>
-          <Link to="/about"> About </Link> */}
-          <Link to="/contact"> Contact </Link>
-          <button className={isLoggedIn ? "loggedInButton" : "signupButton"} onClick={handleAuthButtonClick}>
-            {isLoggedIn ? "Logout" : location.pathname === "/signup" && !isLoggedIn ? "Login" : "Signup"}
+          {isLoggedIn && <Link to="/contact"> Profile </Link>}
+          <button
+            className={isLoggedIn ? "loggedInButton" : "signupButton"}
+            onClick={handleAuthButtonClick}
+          >
+            {isLoggedIn ? "Logout" : location.pathname === "/login" ? "Signup" : "Login"}
           </button>
         </div>
       </div>
       <div className="rightSide">
         <Link to="/"> Home </Link>
-        {/* <Link to="/menu"> Menu </Link>
-        <Link to="/about"> About </Link> */}
-        <Link to="/contact"> Contact </Link>
-        <button className={isLoggedIn ? "loggedInButton" : "signupButton"} onClick={handleAuthButtonClick}>
-          {isLoggedIn ? "Logout" : location.pathname === "/signup" && !isLoggedIn ? "Login" : "Signup"}
+        {isLoggedIn && <Link to="/contact"> Profile </Link>}
+        <button
+          className={isLoggedIn ? "loggedInButton" : "signupButton"}
+          onClick={handleAuthButtonClick}
+        >
+          {isLoggedIn ? "Logout" : location.pathname === "/login" ? "Signup" : "Login"}
         </button>
         <button onClick={toggleNavbar}>
           <ReorderIcon />
