@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import SignUpBannerImage from "../assets/aid.jpg";
-import "../styles/Sign-up.css";
+import SignUpBannerImage from "../assets/teamwork-login.png";
+import styles from "../styles/Signup.module.css";
 import axios from 'axios';
 
 function Signup() {
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         confirmPassword: ''
@@ -23,7 +24,7 @@ function Signup() {
     };
 
     const handleSubmit = async () => {
-        if (formData.name.trim() === '' || formData.email.trim() === '' || formData.password.trim() === '' || formData.confirmPassword.trim() === '') {
+        if (formData.firstName.trim() === '' || formData.lastName.trim() === '' || formData.email.trim() === '' || formData.password.trim() === '' || formData.confirmPassword.trim() === '') {
             setError('Please fill out all fields.');
             return;
         }
@@ -54,53 +55,57 @@ function Signup() {
             window.location.href = '/login';
         } catch (error) {
             console.error('Error signing up:', error);
-            // Handle error, e.g., show an error message to the user
+            setError('Failed to sign up. Please try again later.');
         }
     };
 
-
     return (
-        <div className="signup">
-            <div className="splitContainer">
-                <div className="leftPanel" style={{ backgroundImage: `url(${SignUpBannerImage})` }}>
-                    <h1>Rescue Starts Here</h1>
-                    <div className="overlay"></div>
+        <div className={styles.signup}>
+            <div className={styles.splitContainer}>
+                <div className={styles.leftPanel}>
+                    <div className={styles.overlay}></div>
+                    <img src={SignUpBannerImage} alt="Sign Up Banner" />
+                    <h1>Achieving Great Things</h1>
                 </div>
 
-                <div className="rightPanel">
-                    <div className="formBox">
+                <div className={styles.rightPanel}>
+                    <div className={styles.formBox}>
                         <form>
                             <h2>Sign Up</h2>
-                            <div className="inputbox">
-                                <label>Name</label> <br></br>
-                                <input type="text" required placeholder="Enter Name" name="name" value={formData.name} onChange={handleChange} />
+                            <div className={styles.inputbox}>
+                                <label>First Name</label>
+                                <input type="text" required placeholder="Enter First Name" name="firstName" value={formData.firstName} onChange={handleChange} />
                             </div>
 
-                            <div className="inputbox">
-                                <label>Email</label> <br></br>
+                            <div className={styles.inputbox}>
+                                <label>Last Name</label>
+                                <input type="text" required placeholder="Enter Last Name" name="lastName" value={formData.lastName} onChange={handleChange} />
+                            </div>
+
+                            <div className={styles.inputbox}>
+                                <label>Email</label>
                                 <input type="email" required placeholder="Enter email" name="email" value={formData.email} onChange={handleChange} />
                             </div>
 
-                            <div className="inputbox">
-                                <label>Password</label> <br></br>
+                            <div className={styles.inputbox}>
+                                <label>Password</label>
                                 <input type="password" required placeholder="Enter password" name="password" value={formData.password} onChange={handleChange} />
                             </div>
 
-                            <div className="inputbox">
-                                <label>Confirm Password</label> <br></br>
+                            <div className={styles.inputbox}>
+                                <label>Confirm Password</label>
                                 <input type="password" required placeholder="Confirm password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
                             </div>
 
-                            {error && <div className="error">{error}</div>}
+                            {error && <div className={styles.error}>{error}</div>}
 
-                            <div className="loginhere">
+                            <div className={styles.loginhere}>
                                 <p>
                                     Already have an account? <a href="/login">Log in</a>
                                 </p>
                             </div>
 
                             <button type="button" onClick={handleSubmit}>Create Account</button>
-
                         </form>
                     </div>
                 </div>

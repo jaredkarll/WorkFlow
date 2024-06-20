@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../App';
-import LoginBannerImage from "../assets/aid.jpg";
-import "../styles/Sign-up.css"
+import LoginBannerImage from "../assets/teamwork-login.png";
+import styles from "../styles/Login.module.css"; // Ensure this path is correct and points to the correct CSS file
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
@@ -14,6 +14,12 @@ function Login() {
     });
 
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            history.push('/userdash');
+        }
+    }, [isLoggedIn, history]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,19 +40,20 @@ function Login() {
     };
 
     return (
-        <div className="signup">
-            <div className="splitContainer">
-                <div className="leftPanel" style={{ backgroundImage: `url(${LoginBannerImage})` }}>
+        <div className={styles.signup}>
+            <div className={styles.splitContainer}>
+                <div className={styles.leftPanel}>
+                    <div className={styles.overlay}></div>
+                    <img src={LoginBannerImage} alt="Login Banner" />
                     <h1>Rescue Starts Here</h1>
-                    <div className="overlay"></div>
                 </div>
 
-                <div className="rightPanel">
-                    <div className="formBox">
+                <div className={styles.rightPanel}>
+                    <div className={styles.formBox}>
                         <form>
                             <h2>Log In</h2>
 
-                            <div className="inputbox">
+                            <div className={styles.inputbox}>
                                 <label>Email</label>
                                 <br />
                                 <input
@@ -59,7 +66,7 @@ function Login() {
                                 />
                             </div>
 
-                            <div className="inputbox">
+                            <div className={styles.inputbox}>
                                 <label>Password</label>
                                 <br />
                                 <input
@@ -73,11 +80,11 @@ function Login() {
                                 />
                             </div>
 
-                            <div className="passwordreset">
+                            <div className={styles.passwordreset}>
                                 <a href="/forgotpassword">Forgot Password</a>
                             </div>
 
-                            {error && <div className="error">{error}</div>}
+                            {error && <div className={styles.error}>{error}</div>}
 
                             <button type="button" onClick={handleSubmit}>Log In</button>
                         </form>
