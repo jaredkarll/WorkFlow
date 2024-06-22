@@ -4,6 +4,8 @@ import "../styles/UserDashboard.css";
 import SideMenu from '../components/SideMenu';
 import Announcements from '../components/Announcements';
 import Tasks from '../components/Tasks';
+import Projects from '../components/Projects';
+import ProjectDetails from '../pages/ProjectDetails';
 
 const UserDashboard = () => {
     const { path } = useRouteMatch();
@@ -18,7 +20,8 @@ const UserDashboard = () => {
                     </Route>
                     <Route path={`${path}/announcements`} component={Announcements} />
                     <Route path={`${path}/tasks`} component={Tasks} />
-                    {/* Add more routes as needed */}
+                    <Route exact path={`${path}/projects`} component={Projects} />
+                    <Route path={`${path}/projects/:id`} component={ProjectDetails} />
                 </Switch>
             </div>
         </div>

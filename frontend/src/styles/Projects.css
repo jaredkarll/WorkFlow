@@ -1,0 +1,143 @@
+/* src/styles/Projects.css */
+.project-page {
+    padding: 20px;
+}
+
+.project-list {
+    margin-top: 20px;
+}
+
+.project-header, .project-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.project-header {
+    font-weight: bold;
+}
+
+.project-column, .members-column, .progress-column, .actions-column {
+    flex: 1;
+    text-align: left;
+    padding: 0 20px;
+}
+
+.members-column > div {
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 100px;
+    height: 10px;
+}
+
+.progress-fill {
+    background-color: #007bff;
+    height: 100%;
+}
+
+.progress-column span {
+    margin-left: 10px;
+}
+
+.actions-column button {
+    margin-right: 10px;
+}
+
+.create-project-button {
+    margin-bottom: 20px;
+}
+
+.create-project-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.create-project-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.member-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.member-group select {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.member-group button {
+    padding: 10px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.member-group button:hover {
+    background-color: #c82333;
+}
+
+button[type="button"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+button[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}

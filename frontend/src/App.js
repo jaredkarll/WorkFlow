@@ -14,6 +14,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminReportDispatch from "./pages/AdminReportDispatch";
 import CreateTask from "./pages/CreateTask";
+import ProjectDetails from "./pages/ProjectDetails";
+import EditProject from "./pages/EditProject"; // Import EditProject
 
 export const AuthContext = React.createContext();
 
@@ -36,7 +38,9 @@ function App() {
                         <Route path="/report/:id" exact component={ViewDetailedReport} />
                         <Route path="/admindash" exact component={AdminDashboard} />
                         <Route path="/reportdispatch/:id" exact component={AdminReportDispatch} />
-                        <Route path="/createtask" exact component={CreateTask} /> {/* New route */}
+                        <Route path="/createtask" exact component={CreateTask} />
+                        <Route path="/project/:id" exact component={ProjectDetails} />
+                        <Route path="/edit-project/:id" exact component={EditProject} /> {/* New route */}
                     </Switch>
                     <Footer />
                 </Router>

@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3600, // Change depending on port used
+    port: 3306,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -35,7 +35,6 @@ app.get('/users', (req, res) => {
         res.status(200).json(results);
     });
 });
-
 
 // User signup
 app.post('/signupsubmit', (req, res) => {
@@ -117,7 +116,6 @@ app.put('/forgotpassword', (req, res) => {
     );
 });
 
-
 // Fetch tasks with subtasks
 app.get('/tasks', (req, res) => {
     const sql = `
@@ -152,7 +150,6 @@ app.get('/tasks', (req, res) => {
     });
 });
 
-
 // Update subtask status
 app.put('/subtasks/:id', (req, res) => {
     const { id } = req.params;
@@ -169,7 +166,6 @@ app.put('/subtasks/:id', (req, res) => {
         }
     );
 });
-
 
 // Create task with subtasks
 app.post('/tasks', (req, res) => {
@@ -214,6 +210,235 @@ app.post('/tasks', (req, res) => {
     });
 });
 
+// Fetch projects
+app.get('/projects', (req, res) => {
+    const sql = `
+        SELECT p.id, p.name, p.progress, p.goals, p.methodology, GROUP_CONCAT(u.first_name, ' ', u.last_name) AS members
+        FROM projects p
+        JOIN project_members pm ON p.id = pm.project_id
+        JOIN users u ON pm.user_id = u.id
+        GROUP BY p.id
+    `;
+    connectDB.query(sql, (error, results) => {
+        if (error) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+
+        const projects = results.map(project => ({
+            id: project.id,
+            name: project.name,
+            progress: project.progress,
+            goals: project.goals,
+            methodology: project.methodology,
+            members: project.members.split(',')
+        }));
+
+        res.status(200).json(projects);
+    });
+});
+
+// Fetch project details
+app.get('/projects/:id', (req, res) => {
+    const { id } = req.params;
+
+    const sql = `
+        SELECT p.id, p.name, p.progress, p.goals, p.methodology, GROUP_CONCAT(u.first_name, ' ', u.last_name) AS members
+        FROM projects p
+        JOIN project_members pm ON p.id = pm.project_id
+        JOIN users u ON pm.user_id = u.id
+        WHERE p.id = ?
+        GROUP BY p.id
+    `;
+    connectDB.query(sql, [id], (error, results) => {
+        if (error) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+
+        const project = results[0];
+        project.members = project.members.split(',');
+
+        res.status(200).json(project);
+    });
+});
+
+// Create project
+app.post('/projects', (req, res) => {
+    const { name, progress, goals, methodology, members } = req.body;
+
+    connectDB.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection failed' });
+        }
+
+        const projectQuery = 'INSERT INTO projects (name, progress, goals, methodology) VALUES (?, ?, ?, ?)';
+        connection.query(projectQuery, [name, progress, goals, methodology], (projectError, projectResults) => {
+            if (projectError) {
+                connection.release();
+                return res.status(500).json({ message: 'Project creation failed' });
+            }
+
+            const projectId = projectResults.insertId;
+            const memberQueries = members.map(member => {
+                return new Promise((resolve, reject) => {
+                    const memberQuery = 'INSERT INTO project_members (project_id, user_id) VALUES (?, ?)';
+                    connection.query(memberQuery, [projectId, member], (memberError, memberResults) => {
+                        if (memberError) {
+                            reject(memberError);
+                        } else {
+                            resolve(memberResults);
+                        }
+                    });
+                });
+            });
+
+            Promise.all(memberQueries)
+                .then(() => {
+                    connection.release();
+                    res.status(201).json({ message: 'Project created successfully', id: projectId, name, progress, goals, methodology, members });
+                })
+                .catch(memberError => {
+                    connection.release();
+                    res.status(500).json({ message: 'Project member creation failed' });
+                });
+        });
+    });
+});
+
+// Edit project
+app.put('/projects/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, progress, goals, methodology, members } = req.body;
+
+    connectDB.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection failed' });
+        }
+
+        const projectQuery = 'UPDATE projects SET name = ?, progress = ?, goals = ?, methodology = ? WHERE id = ?';
+        connection.query(projectQuery, [name, progress, goals, methodology, id], (projectError) => {
+            if (projectError) {
+                connection.release();
+                return res.status(500).json({ message: 'Project update failed' });
+            }
+
+            const deleteMembersQuery = 'DELETE FROM project_members WHERE project_id = ?';
+            connection.query(deleteMembersQuery, [id], (deleteError) => {
+                if (deleteError) {
+                    connection.release();
+                    return res.status(500).json({ message: 'Failed to delete old project members' });
+                }
+
+                const memberQueries = members.map(member => {
+                    return new Promise((resolve, reject) => {
+                        const memberQuery = 'INSERT INTO project_members (project_id, user_id) VALUES (?, ?)';
+                        connection.query(memberQuery, [id, member], (memberError, memberResults) => {
+                            if (memberError) {
+                                reject(memberError);
+                            } else {
+                                resolve(memberResults);
+                            }
+                        });
+                    });
+                });
+
+                Promise.all(memberQueries)
+                    .then(() => {
+                        connection.release();
+                        res.status(200).json({ message: 'Project updated successfully' });
+                    })
+                    .catch(memberError => {
+                        connection.release();
+                        res.status(500).json({ message: 'Project member update failed' });
+                    });
+            });
+        });
+    });
+});
+
+// Delete project
+app.delete('/projects/:id', (req, res) => {
+    const { id } = req.params;
+
+    connectDB.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection failed' });
+        }
+
+        const deleteMembersQuery = 'DELETE FROM project_members WHERE project_id = ?';
+        connection.query(deleteMembersQuery, [id], (deleteMembersError) => {
+            if (deleteMembersError) {
+                connection.release();
+                return res.status(500).json({ message: 'Failed to delete project members' });
+            }
+
+            const deleteProjectQuery = 'DELETE FROM projects WHERE id = ?';
+            connection.query(deleteProjectQuery, [id], (deleteProjectError) => {
+                if (deleteProjectError) {
+                    connection.release();
+                    return res.status(500).json({ message: 'Project deletion failed' });
+                }
+
+                connection.release();
+                res.status(200).json({ message: 'Project deleted successfully' });
+            });
+        });
+    });
+});
+
+// Update project
+app.put('/projects/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, progress, goals, methodology, members } = req.body;
+
+    connectDB.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection failed' });
+        }
+
+        const projectQuery = 'UPDATE projects SET name = ?, progress = ?, goals = ?, methodology = ? WHERE id = ?';
+        connection.query(projectQuery, [name, progress, goals, methodology, id], (projectError) => {
+            if (projectError) {
+                connection.release();
+                return res.status(500).json({ message: 'Project update failed' });
+            }
+
+            const deleteMembersQuery = 'DELETE FROM project_members WHERE project_id = ?';
+            connection.query(deleteMembersQuery, [id], (deleteError) => {
+                if (deleteError) {
+                    connection.release();
+                    return res.status(500).json({ message: 'Failed to delete old project members' });
+                }
+
+                const memberQueries = members.map(member => {
+                    return new Promise((resolve, reject) => {
+                        const memberQuery = 'INSERT INTO project_members (project_id, user_id) VALUES (?, ?)';
+                        connection.query(memberQuery, [id, member], (memberError, memberResults) => {
+                            if (memberError) {
+                                reject(memberError);
+                            } else {
+                                resolve(memberResults);
+                            }
+                        });
+                    });
+                });
+
+                Promise.all(memberQueries)
+                    .then(() => {
+                        connection.release();
+                        res.status(200).json({ message: 'Project updated successfully' });
+                    })
+                    .catch(memberError => {
+                        connection.release();
+                        res.status(500).json({ message: 'Project member update failed' });
+                    });
+            });
+        });
+    });
+});
 
 
 

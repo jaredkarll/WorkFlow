@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3600
--- Generation Time: Jun 22, 2024 at 08:45 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Host: 127.0.0.1
+-- Generation Time: Jun 22, 2024 at 04:04 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -42,6 +42,61 @@ CREATE TABLE `announcements` (
 INSERT INTO `announcements` (`id`, `title`, `content`, `author_id`, `date`) VALUES
 (1, 'Welcome to MGHS!', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur suscipit dictum justo, eget sollicitudin purus viverra sit amet. Curabitur a eleifend justo, vitae congue turpis. Mauris eget ipsum nibh.', 1, '2024-06-20 13:50:05'),
 (2, 'Mabuhay mga Kababayan!', 'This is it!', 1, '2024-06-22 04:53:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `projects`
+--
+
+CREATE TABLE `projects` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `progress` int(11) NOT NULL DEFAULT 0,
+  `goals` text DEFAULT NULL,
+  `methodology` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `projects`
+--
+
+INSERT INTO `projects` (`id`, `name`, `progress`, `goals`, `methodology`) VALUES
+(2, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, 'Matapos na to and makapag japan', 'Di ko alam'),
+(3, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
+(4, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
+(5, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
+(6, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
+(7, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
+(8, 'Unilink Project', 100, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_members`
+--
+
+CREATE TABLE `project_members` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `project_members`
+--
+
+INSERT INTO `project_members` (`id`, `project_id`, `user_id`) VALUES
+(15, 8, 1),
+(16, 8, 3),
+(17, 8, 9),
+(18, 8, 15),
+(19, 8, 12),
+(31, 2, 8),
+(32, 2, 7),
+(33, 2, 3),
+(34, 2, 5),
+(35, 2, 17);
 
 -- --------------------------------------------------------
 
@@ -119,7 +174,19 @@ INSERT INTO `users` (`id`, `email`, `first_name`, `last_name`, `password`, `crea
 (3, 'cardo@mail.com', 'Cardo', 'Dalisay', '5678', '2024-06-20 11:42:57', 0),
 (4, 'admin@example.com', 'Admin', 'User', 'password', '2024-06-20 13:49:44', 0),
 (5, 'john.doe@example.com', 'John', 'Doe', 'password123', '2024-06-22 05:06:13', 0),
-(6, 'jane.smith@example.com', 'Jane', 'Smith', 'password123', '2024-06-22 05:06:13', 1);
+(6, 'jane.smith@example.com', 'Jane', 'Smith', 'password123', '2024-06-22 05:06:13', 1),
+(7, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:23:58', 0),
+(8, 'fearless@example.com', 'Fearless', '', 'password', '2024-06-22 12:23:58', 0),
+(9, 'speaknow@example.com', 'Speak', 'Now', 'password', '2024-06-22 12:23:58', 0),
+(10, 'red@example.com', 'Red', '', 'password', '2024-06-22 12:23:58', 0),
+(11, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:24:53', 0),
+(12, 'fearless@example.com', 'Fearless', '', 'password', '2024-06-22 12:24:53', 0),
+(13, 'speaknow@example.com', 'Speak', 'Now', 'password', '2024-06-22 12:24:53', 0),
+(14, 'red@example.com', 'Red', '', 'password', '2024-06-22 12:24:53', 0),
+(15, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:26:19', 0),
+(16, 'fearless@example.com', 'Fearless', '', 'password', '2024-06-22 12:26:19', 0),
+(17, 'speaknow@example.com', 'Speak', 'Now', 'password', '2024-06-22 12:26:19', 0),
+(18, 'red@example.com', 'Red', '', 'password', '2024-06-22 12:26:19', 0);
 
 --
 -- Indexes for dumped tables
@@ -131,6 +198,20 @@ INSERT INTO `users` (`id`, `email`, `first_name`, `last_name`, `password`, `crea
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`id`),
   ADD KEY `author_id` (`author_id`);
+
+--
+-- Indexes for table `projects`
+--
+ALTER TABLE `projects`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `project_members`
+--
+ALTER TABLE `project_members`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `subtasks`
@@ -162,6 +243,18 @@ ALTER TABLE `announcements`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `project_members`
+--
+ALTER TABLE `project_members`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
 -- AUTO_INCREMENT for table `subtasks`
 --
 ALTER TABLE `subtasks`
@@ -177,7 +270,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Constraints for dumped tables
@@ -188,6 +281,13 @@ ALTER TABLE `users`
 --
 ALTER TABLE `announcements`
   ADD CONSTRAINT `announcements_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `project_members`
+--
+ALTER TABLE `project_members`
+  ADD CONSTRAINT `project_members_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
+  ADD CONSTRAINT `project_members_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `subtasks`
