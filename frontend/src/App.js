@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -12,8 +13,7 @@ import ViewDetailedReport from "./pages/ReportDetails";
 import ForgotPassword from "./pages/ForgotPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminReportDispatch from "./pages/AdminReportDispatch";
-// import SideMenu from "./components/SideMenu";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import CreateTask from "./pages/CreateTask";
 
 export const AuthContext = React.createContext();
 
@@ -31,13 +31,12 @@ function App() {
                         <Route path="/signup" exact component={Signup} />
                         <Route path="/login" exact component={Login} />
                         <Route path="/forgotpassword" exact component={ForgotPassword} />
-                        {/* User Side */}
+                        <Route path="/userdashboard" component={UserDashboard} />
                         <Route path="/report" exact component={UserSubmitReport} />
-                        <Route path="/userdash" exact component={UserDashboard} />
                         <Route path="/report/:id" exact component={ViewDetailedReport} />
-                        {/* Admin Side */}
                         <Route path="/admindash" exact component={AdminDashboard} />
                         <Route path="/reportdispatch/:id" exact component={AdminReportDispatch} />
+                        <Route path="/createtask" exact component={CreateTask} /> {/* New route */}
                     </Switch>
                     <Footer />
                 </Router>

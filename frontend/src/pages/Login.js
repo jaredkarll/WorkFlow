@@ -17,7 +17,7 @@ function Login() {
 
     useEffect(() => {
         if (isLoggedIn) {
-            history.push('/userdash');
+            history.push('/userdashboard');
         }
     }, [isLoggedIn, history]);
 
@@ -31,7 +31,7 @@ function Login() {
                 console.log(response.data);
                 alert('You have successfully logged in!');
                 setIsLoggedIn(true);
-                history.push('/userdash');
+                history.push('/userdashboard');
             })
             .catch(error => {
                 console.error('Error logging in:', error);

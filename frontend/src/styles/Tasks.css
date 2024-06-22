@@ -1,0 +1,101 @@
+.tasks-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1f1f1;
+}
+
+.create-task-button {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+
+.create-task-button:hover {
+    background-color: #0056b3;
+}
+
+.tasks-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.task-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.task-header {
+    margin-bottom: 10px;
+}
+
+.task-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.subtasks-list {
+    margin-bottom: 20px;
+}
+
+.subtask {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.subtask input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.task-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+
+.task-button.accomplished {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.task-button.accomplished:hover {
+    background-color: #0056b3;
+}
+
+.task-button.unaccomplished {
+    background-color: #ccc;
+    color: #000;
+    border: none;
+}
+
+.task-button.view-file {
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.task-button.view-file:hover {
+    background-color: #007bff;
+    color: #fff;
+}

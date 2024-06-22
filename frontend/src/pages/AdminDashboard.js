@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import "../styles/AdminDashboard.css";
+import SideMenu from '../components/SideMenu';
+import Announcements from '../components/Announcements';
 
 const AdminDashboard = () => {
     const [reports, setReports] = useState([]);
@@ -19,49 +21,32 @@ const AdminDashboard = () => {
         fetchReports();
     }, []);
 
-    // Function to count reports based on status
-    const countReportsByStatus = (status) => {
-        return reports.filter(report => report.status === status).length;
-    };
-
     return (
-        <div className="admin-dashboard-container">
-            <div className="admin-reports-container">
-                {reports.map((report, index) => (
-                    <Link key={index} to={`/reportdispatch/${report.UserID}`} className="report-link">
-                        <div className="admin-report-card">
-                            <div className="report-header">
-                                <h3>{report.incidentTitle}</h3>
-                                <span className={`status-tag ${report.status ? report.status.toLowerCase() : 'default'}`}>
-                                    {report.status || 'Default Status'}
-                                </span>
-                            </div>
-                            <p>
-                                Address: {report.street1}, {report.barangay}, {report.municipality}<br />
-                                Report Type: {report.reportType}<br />
-                                Date: {new Date(report.date).toLocaleString()}
-                            </p>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-            <div className="admin-report-counter-container">
-                {/* Counts the Total Number of Reports */}
-                <div className="report-counter">
-                    TOTAL NUMBER OF REPORTS: {reports.length}
+        <div className="main-layout">
+            <SideMenu />
+            <div className="content">
+                <div className="announcements-section">
+                    <h2>Announcements</h2>
+                    <Announcements showCreateButton={true} />
                 </div>
-
-                {/* Breakdown of report statuses */}
-                <div className="status-breakdown">
-                    <div className="waiting-dispatch">
-                        Waiting Dispatch: {countReportsByStatus("Waiting Dispatch")}
-                    </div>
-                    <div className="rescue-dispatched">
-                        Rescue Dispatched: {countReportsByStatus("Rescue Dispatched")}
-                    </div>
-                    <div className="completed">
-                        Completed: {countReportsByStatus("Completed")}
-                    </div>
+                <div className="reports-container">
+                    {reports.map((report, index) => (
+                        <Link key={index} to={`/report/${report.UserID}`} className="report-link">
+                            <div className="report-card">
+                                <div className="report-header">
+                                    <h3>{report.incidentTitle}</h3>
+                                    <span className={`status-tag ${report.status ? report.status.toLowerCase() : 'default'}`}>
+                                        {report.status || 'Default Status'}
+                                    </span>
+                                </div>
+                                <p>
+                                    Address: {report.street1}, {report.barangay}, {report.municipality}<br />
+                                    Report Type: {report.reportType}<br />
+                                    Date: {new Date(report.date).toLocaleString()}
+                                </p>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </div>

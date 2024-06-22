@@ -1,11 +1,18 @@
 /* SideMenu.css */
 .side-menu {
     width: 250px;
-    height: 100vh;
+    height: auto;
     background-color: #002855;
     color: white;
     padding-top: 20px;
 }
+
+
+.side-menu nav ul li a.active {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
 
 .logo {
     text-align: center;

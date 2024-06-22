@@ -46,7 +46,7 @@ function ForgotPassword() {
             }
 
             // Update password
-            await axios.post('http://localhost:8800/forgotpassword', {
+            await axios.put('http://localhost:8800/forgotpassword', {
                 email: formData.email,
                 password: formData.password
             });
@@ -56,10 +56,9 @@ function ForgotPassword() {
             window.location.href = '/login';
         } catch (error) {
             console.error('Error updating password:', error);
-            // Handle error, e.g., show an error message to the user
+            setError('Failed to update password. Please try again later.');
         }
     };
-
 
     return (
         <div className="forgot-password">
@@ -75,17 +74,17 @@ function ForgotPassword() {
                             <h2>Forgot Password</h2>
 
                             <div className="inputbox">
-                                <label>Email</label> <br></br>
+                                <label>Email</label> <br />
                                 <input type="email" required placeholder="Enter email" name="email" value={formData.email} onChange={handleChange} />
                             </div>
 
                             <div className="inputbox">
-                                <label>New Password</label> <br></br>
+                                <label>New Password</label> <br />
                                 <input type="password" required placeholder="Enter password" name="password" value={formData.password} onChange={handleChange} />
                             </div>
 
                             <div className="inputbox">
-                                <label>Confirm New Password</label> <br></br>
+                                <label>Confirm New Password</label> <br />
                                 <input type="password" required placeholder="Confirm password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
                             </div>
 
@@ -98,7 +97,6 @@ function ForgotPassword() {
                             </div>
 
                             <button type="button" onClick={handleSubmit}>Submit</button>
-
                         </form>
                     </div>
                 </div>
