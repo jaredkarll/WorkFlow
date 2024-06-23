@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 22, 2024 at 04:04 PM
+-- Host: 127.0.0.1:3307
+-- Generation Time: Jun 23, 2024 at 09:59 AM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -46,6 +46,27 @@ INSERT INTO `announcements` (`id`, `title`, `content`, `author_id`, `date`) VALU
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `files`
+--
+
+CREATE TABLE `files` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `filename` varchar(255) DEFAULT NULL,
+  `filepath` varchar(255) DEFAULT NULL,
+  `upload_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `files`
+--
+
+INSERT INTO `files` (`id`, `project_id`, `filename`, `filepath`, `upload_date`) VALUES
+(1, 2, 'Confim', '/uploads/Confim', '2024-06-23 07:57:44');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `projects`
 --
 
@@ -68,7 +89,8 @@ INSERT INTO `projects` (`id`, `name`, `progress`, `goals`, `methodology`) VALUES
 (5, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
 (6, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
 (7, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
-(8, 'Unilink Project', 100, NULL, NULL);
+(8, 'Unilink Project', 100, NULL, NULL),
+(11, 'sad', 50, 'dads', 'asfsa');
 
 -- --------------------------------------------------------
 
@@ -96,7 +118,8 @@ INSERT INTO `project_members` (`id`, `project_id`, `user_id`) VALUES
 (32, 2, 7),
 (33, 2, 3),
 (34, 2, 5),
-(35, 2, 17);
+(35, 2, 17),
+(36, 11, 9);
 
 -- --------------------------------------------------------
 
@@ -200,6 +223,13 @@ ALTER TABLE `announcements`
   ADD KEY `author_id` (`author_id`);
 
 --
+-- Indexes for table `files`
+--
+ALTER TABLE `files`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`);
+
+--
 -- Indexes for table `projects`
 --
 ALTER TABLE `projects`
@@ -243,16 +273,22 @@ ALTER TABLE `announcements`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `files`
+--
+ALTER TABLE `files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `project_members`
 --
 ALTER TABLE `project_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `subtasks`
@@ -281,6 +317,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `announcements`
   ADD CONSTRAINT `announcements_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `files`
+--
+ALTER TABLE `files`
+  ADD CONSTRAINT `files_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`);
 
 --
 -- Constraints for table `project_members`

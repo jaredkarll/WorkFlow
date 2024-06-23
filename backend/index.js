@@ -2,16 +2,20 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 8800;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve static files from 'uploads' directory
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3306,
+    port: 3307,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -25,6 +29,138 @@ connectDB.getConnection((err, connection) => {
     console.log('Connected to database.');
     connection.release();
 });
+
+// Ensure the uploads directory exists
+if (!fs.existsSync('uploads')) {
+    fs.mkdirSync('uploads');
+}
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        console.log('Setting destination for upload');
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        console.log('Setting filename for upload');
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({ storage });
+
+// Endpoint to upload files
+app.post('/upload', upload.single('file'), (req, res) => {
+    const { projectId } = req.body;
+    console.log('Received file upload request');
+    if (!req.file) {
+        console.error('No file uploaded');
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const filePath = `/uploads/${req.file.filename}`;
+    const filename = req.file.filename;
+
+    const query = 'INSERT INTO files (project_id, filename, filepath) VALUES (?, ?, ?)';
+    connectDB.query(query, [projectId, filename, filePath], (err, result) => {
+        if (err) {
+            console.error('Error storing file metadata in database:', err);
+            return res.status(500).json({ message: 'Error storing file metadata' });
+        }
+        console.log('File metadata stored successfully');
+        res.status(201).json({ filePath });
+    });
+});
+
+// Endpoint to get list of uploaded files
+app.get('/resources', (req, res) => {
+    const query = `
+        SELECT f.id, f.filename, f.filepath, f.upload_date, p.name as project_name,
+               GROUP_CONCAT(CONCAT(u.first_name, ' ', u.last_name)) as project_members
+        FROM files f
+        JOIN projects p ON f.project_id = p.id
+        JOIN project_members pm ON p.id = pm.project_id
+        JOIN users u ON pm.user_id = u.id
+        GROUP BY f.id
+    `;
+    connectDB.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching resources:', err);
+            return res.status(500).json({ message: 'Error fetching resources' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Endpoint to delete a file
+app.delete('/resources/:id', (req, res) => {
+    const fileId = req.params.id;
+
+    const getFileQuery = 'SELECT filepath FROM files WHERE id = ?';
+    connectDB.query(getFileQuery, [fileId], (err, results) => {
+        if (err) {
+            console.error('Error fetching file:', err);
+            return res.status(500).json({ message: 'Error fetching file' });
+        }
+
+        const filePath = path.join(__dirname, results[0].filepath);
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error deleting file:', err);
+                return res.status(500).json({ message: 'Error deleting file' });
+            }
+
+            const deleteFileQuery = 'DELETE FROM files WHERE id = ?';
+            connectDB.query(deleteFileQuery, [fileId], (err) => {
+                if (err) {
+                    console.error('Error deleting file metadata:', err);
+                    return res.status(500).json({ message: 'Error deleting file metadata' });
+                }
+                console.log('File deleted successfully:', fileId);
+                res.status(200).json({ message: 'File deleted successfully' });
+            });
+        });
+    });
+});
+
+// Endpoint to rename a file
+app.put('/resources/:id', (req, res) => {
+    const fileId = req.params.id;
+    const { newFileName } = req.body;
+
+    if (!newFileName) {
+        return res.status(400).json({ message: 'New file name is required' });
+    }
+
+    const getFileQuery = 'SELECT filename, filepath FROM files WHERE id = ?';
+    connectDB.query(getFileQuery, [fileId], (err, results) => {
+        if (err) {
+            console.error('Error fetching file:', err);
+            return res.status(500).json({ message: 'Error fetching file' });
+        }
+
+        const oldFilePath = path.join(__dirname, results[0].filepath);
+        const newFilePath = path.join(__dirname, 'uploads', newFileName);
+
+        fs.rename(oldFilePath, newFilePath, (err) => {
+            if (err) {
+                console.error('Error renaming file:', err);
+                return res.status(500).json({ message: 'Error renaming file' });
+            }
+
+            const updateFileQuery = 'UPDATE files SET filename = ?, filepath = ? WHERE id = ?';
+            connectDB.query(updateFileQuery, [newFileName, `/uploads/${newFileName}`, fileId], (err) => {
+                if (err) {
+                    console.error('Error updating file metadata:', err);
+                    return res.status(500).json({ message: 'Error updating file metadata' });
+                }
+                console.log('File renamed successfully from', results[0].filename, 'to', newFileName);
+                res.status(200).json({ message: 'File renamed successfully' });
+            });
+        });
+    });
+});
+
 
 // Fetch users
 app.get('/users', (req, res) => {
@@ -97,6 +233,7 @@ app.post('/announcements', (req, res) => {
     );
 });
 
+
 // Forgot password
 app.put('/forgotpassword', (req, res) => {
     const { email, password } = req.body;
@@ -119,7 +256,7 @@ app.put('/forgotpassword', (req, res) => {
 // Fetch tasks with subtasks
 app.get('/tasks', (req, res) => {
     const sql = `
-        SELECT 
+        SELECT
             t.id as task_id, t.title, t.assigned_to, t.due_date,
             s.id as subtask_id, s.title as subtask_title, s.completed
         FROM tasks t
