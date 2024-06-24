@@ -1,4 +1,3 @@
-// src/pages/EditProject.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
@@ -23,6 +22,7 @@ const EditProject = () => {
                 setGoals(project.goals);
                 setMethodology(project.methodology);
                 setMembers(project.members);
+                console.log('Project fetched:', project);
             })
             .catch(error => {
                 console.error('Error fetching project:', error);
@@ -31,6 +31,7 @@ const EditProject = () => {
         axios.get('http://localhost:8800/users')
             .then(response => {
                 setUserList(response.data);
+                console.log('Users fetched:', response.data);
             })
             .catch(error => {
                 console.error('Error fetching users:', error);

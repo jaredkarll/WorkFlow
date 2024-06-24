@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Resources.css';
+import UploadForm from '../pages/UploadForm';
 
 const Resources = () => {
     const [resources, setResources] = useState([]);
-    const [file, setFile] = useState(null);
-    const [editFileId, setEditFileId] = useState(null);
-    const [newFileName, setNewFileName] = useState('');
     const [projects, setProjects] = useState([]);
-    const [selectedProjectId, setSelectedProjectId] = useState('');
+    const [editResource, setEditResource] = useState(null);
+    const [editFilename, setEditFilename] = useState('');
+    const [editLink, setEditLink] = useState('');
 
     useEffect(() => {
         fetchResources();
@@ -35,84 +35,53 @@ const Resources = () => {
             });
     };
 
-    const handleFileChange = (e) => {
-        console.log('File selected:', e.target.files[0]);
-        setFile(e.target.files[0]);
+    const handleEdit = (resource) => {
+        setEditResource(resource);
+        setEditFilename(resource.filename || '');
+        setEditLink(resource.link || '');
     };
 
-    const handleProjectChange = (e) => {
-        setSelectedProjectId(e.target.value);
+    const handleUpdate = () => {
+        const payload = {
+            newFileName: editFilename,
+            newLink: editLink
+        };
+        axios.put(`http://localhost:8800/resources/${editResource.id}`, payload)
+            .then(response => {
+                setEditResource(null);
+                fetchResources();
+            })
+            .catch(error => {
+                console.error('Error updating resource:', error);
+            });
     };
 
-    const handleUpload = () => {
-        if (!file || !selectedProjectId) {
-            console.error('File and project must be selected');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('projectId', selectedProjectId);
-
-        console.log('Uploading file:', file);
-        axios.post('http://localhost:8800/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then(response => {
-            console.log('File uploaded successfully:', response.data);
-            fetchResources(); // Refresh the resource list
-        })
-        .catch(error => {
-            console.error('Error uploading file:', error);
-        });
-    };
-
-    const handleDelete = (resourceId) => {
-        axios.delete(`http://localhost:8800/resources/${resourceId}`)
+    const handleDelete = (id) => {
+        axios.delete(`http://localhost:8800/resources/${id}`)
             .then(() => {
-                fetchResources(); // Refresh the resource list
+                fetchResources();
             })
             .catch(error => {
                 console.error('Error deleting resource:', error);
             });
     };
 
-    const handleRename = (resourceId) => {
-        if (!newFileName) {
-            console.error('New file name is required');
-            return;
-        }
-
-        axios.put(`http://localhost:8800/resources/${resourceId}`, { newFileName })
-            .then(() => {
-                setEditFileId(null);
-                setNewFileName('');
-                fetchResources(); // Refresh the resource list
-            })
-            .catch(error => {
-                console.error('Error renaming resource:', error);
-            });
+    const handleUploadSuccess = () => {
+        fetchResources();
     };
 
     return (
         <div className="resources-page">
             <h2>Resources</h2>
-            <div className="upload-section">
-                <input type="file" onChange={handleFileChange} />
-                <select onChange={handleProjectChange}>
-                    <option value="">Select Project</option>
-                    {projects.map(project => (
-                        <option key={project.id} value={project.id}>{project.name}</option>
-                    ))}
-                </select>
-                <button onClick={handleUpload}>Upload</button>
-            </div>
+            <UploadForm
+                onSuccess={handleUploadSuccess}
+                projects={projects}
+            />
             <div className="resources-list">
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>File Name</th>
                             <th>Link</th>
                             <th>Project</th>
@@ -123,41 +92,54 @@ const Resources = () => {
                     <tbody>
                         {resources.map(resource => (
                             <tr key={resource.id}>
+                                <td>{resource.id}</td>
+                                <td>{resource.filename}</td>
                                 <td>
-                                    {editFileId === resource.id ? (
-                                        <input
-                                            type="text"
-                                            value={newFileName}
-                                            onChange={(e) => setNewFileName(e.target.value)}
-                                        />
+                                    {resource.link ? (
+                                        <a href={resource.link} target="_blank" rel="noopener noreferrer">
+                                            {resource.link}
+                                        </a>
                                     ) : (
-                                        resource.filename
+                                        <a href={`http://localhost:8800${resource.filepath}`} target="_blank" rel="noopener noreferrer">
+                                            View File
+                                        </a>
                                     )}
                                 </td>
-                                <td><a href={`http://localhost:8800${resource.filepath}`} target="_blank" rel="noopener noreferrer">View File</a></td>
                                 <td>{resource.project_name}</td>
                                 <td>{resource.project_members}</td>
                                 <td>
-                                    {editFileId === resource.id ? (
-                                        <>
-                                            <button onClick={() => handleRename(resource.id)}>Save</button>
-                                            <button onClick={() => setEditFileId(null)}>Cancel</button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button onClick={() => {
-                                                setEditFileId(resource.id);
-                                                setNewFileName(resource.filename); // Set the initial value of the input
-                                            }}>Edit</button>
-                                            <button onClick={() => handleDelete(resource.id)}>Delete</button>
-                                        </>
-                                    )}
+                                    <button onClick={() => handleEdit(resource)}>Edit</button>
+                                    <button onClick={() => handleDelete(resource.id)}>Delete</button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            {editResource && (
+                <div className="edit-form">
+                    <h3>Edit Resource</h3>
+                    <div>
+                        <label>Filename:</label>
+                        <input
+                            type="text"
+                            value={editFilename}
+                            onChange={(e) => setEditFilename(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Link:</label>
+                        <input
+                            type="text"
+                            value={editLink}
+                            onChange={(e) => setEditLink(e.target.value)}
+                        />
+                    </div>
+                    <button onClick={handleUpdate}>Update</button>
+                    <button onClick={() => setEditResource(null)}>Cancel</button>
+                </div>
+            )}
         </div>
     );
 };

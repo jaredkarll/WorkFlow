@@ -7,6 +7,8 @@ import Announcements from '../components/Announcements';
 import Tasks from '../components/Tasks';
 import Projects from '../components/Projects';
 import Resources from '../components/Resources'; // Import the Resources component
+import UploadForm from './UploadForm';
+
 
 const UserDashboard = () => {
     const { path } = useRouteMatch();

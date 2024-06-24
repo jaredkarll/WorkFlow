@@ -14,6 +14,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminReportDispatch from "./pages/AdminReportDispatch";
 import CreateTask from "./pages/CreateTask";
+import EditProject from "./pages/EditProject";
 import ProjectDetails from "./pages/ProjectDetails";
 import Resources from "./components/Resources";
 
@@ -40,7 +41,8 @@ function App() {
                         <Route path="/reportdispatch/:id" exact component={AdminReportDispatch} />
                         <Route path="/createtask" exact component={CreateTask} />
                         <Route path="/project/:id" exact component={ProjectDetails} />
-                        <Route path="/resources" exact component={Resources} /> {/* New route */}
+                        <Route path="/edit-project/:id" exact component={EditProject} /> {/* Ensure this route is correctly defined */}
+                        <Route path="/resources" exact component={Resources} />
                     </Switch>
                     <Footer />
                 </Router>

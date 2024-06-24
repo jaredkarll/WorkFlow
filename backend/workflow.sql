@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Jun 23, 2024 at 09:59 AM
+-- Generation Time: Jun 24, 2024 at 05:20 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -54,15 +54,20 @@ CREATE TABLE `files` (
   `project_id` int(11) DEFAULT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `filepath` varchar(255) DEFAULT NULL,
-  `upload_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `upload_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `type` enum('file','link') NOT NULL DEFAULT 'file',
+  `link` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `files`
 --
 
-INSERT INTO `files` (`id`, `project_id`, `filename`, `filepath`, `upload_date`) VALUES
-(1, 2, 'Confim', '/uploads/Confim', '2024-06-23 07:57:44');
+INSERT INTO `files` (`id`, `project_id`, `filename`, `filepath`, `upload_date`, `type`, `link`) VALUES
+(1, 2, 'Confim', '/uploads/Confim', '2024-06-23 07:57:44', 'file', NULL),
+(2, 8, 'hatdog69-message.txt', '/uploads/hatdog69-message.txt', '2024-06-24 13:18:21', 'file', NULL),
+(3, 8, NULL, NULL, '2024-06-24 13:18:28', 'link', 'https://open.spotify.com/playlist/0yd0eQ21LLD5lnMN7T05x3'),
+(4, 8, '1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '/uploads/1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '2024-06-24 13:48:38', 'file', NULL);
 
 -- --------------------------------------------------------
 
@@ -89,8 +94,7 @@ INSERT INTO `projects` (`id`, `name`, `progress`, `goals`, `methodology`) VALUES
 (5, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
 (6, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
 (7, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
-(8, 'Unilink Project', 100, NULL, NULL),
-(11, 'sad', 50, 'dads', 'asfsa');
+(8, 'Unilink Project', 100, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -118,8 +122,7 @@ INSERT INTO `project_members` (`id`, `project_id`, `user_id`) VALUES
 (32, 2, 7),
 (33, 2, 3),
 (34, 2, 5),
-(35, 2, 17),
-(36, 11, 9);
+(35, 2, 17);
 
 -- --------------------------------------------------------
 
@@ -276,7 +279,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `projects`
