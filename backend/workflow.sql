@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: Jun 25, 2024 at 02:35 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: localhost:3600
+-- Generation Time: Jun 25, 2024 at 04:32 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -142,16 +142,11 @@ CREATE TABLE `subtasks` (
 --
 
 INSERT INTO `subtasks` (`id`, `task_id`, `title`, `completed`) VALUES
-(1, 1, 'Wireframe', 1),
-(2, 1, 'Prototyping', 1),
-(3, 1, 'Color Scheme', 1),
-(4, 1, 'Testing', 1),
-(5, 1, 'File Link', 1),
-(6, 2, 'Flowchart', 0),
-(7, 2, 'Use-Case Diagram', 0),
-(8, 2, 'UI Design', 0),
-(9, 2, 'Testing', 0),
-(10, 2, 'File Link', 0);
+(43, 1, 'Wireframe', 1),
+(44, 1, 'Prototyping', 1),
+(45, 1, 'Color Scheme', 1),
+(46, 1, 'Testing', 1),
+(55, 3, 'Create Documentation', 0);
 
 -- --------------------------------------------------------
 
@@ -163,6 +158,7 @@ CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `assigned_to` varchar(255) NOT NULL,
+  `project_id` int(11) NOT NULL,
   `due_date` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -171,9 +167,9 @@ CREATE TABLE `tasks` (
 -- Dumping data for table `tasks`
 --
 
-INSERT INTO `tasks` (`id`, `title`, `assigned_to`, `due_date`, `created_at`) VALUES
-(1, 'UI/UX Design', 'Taylor Swift', '2024-04-30', '2024-06-22 05:06:13'),
-(2, 'Project Documentation', 'Geldof Resuello', '2024-04-30', '2024-06-22 05:06:13');
+INSERT INTO `tasks` (`id`, `title`, `assigned_to`, `project_id`, `due_date`, `created_at`) VALUES
+(1, 'UI/UX Design', 'Taylor Swift', 0, '2024-04-26', '2024-06-22 05:06:13'),
+(3, 'Project Documentation', 'John Doe', 0, '2024-06-23', '2024-06-25 14:29:32');
 
 -- --------------------------------------------------------
 
@@ -279,7 +275,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -297,13 +293,13 @@ ALTER TABLE `project_members`
 -- AUTO_INCREMENT for table `subtasks`
 --
 ALTER TABLE `subtasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
