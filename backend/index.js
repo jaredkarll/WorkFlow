@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8800;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve static files from 'uploads' directory
 
 const connectDB = mysql.createPool({
     host: 'localhost',
@@ -30,10 +30,12 @@ connectDB.getConnection((err, connection) => {
     connection.release();
 });
 
+// Ensure the uploads directory exists
 if (!fs.existsSync('uploads')) {
     fs.mkdirSync('uploads');
 }
 
+// Set up multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -45,12 +47,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Endpoint to upload files or submit links
 app.post('/upload', upload.single('file'), (req, res) => {
     const { projectId, link } = req.body;
 
+    if (!projectId) {
+        return res.status(400).json({ message: 'Project ID is required' });
+    }
+
     if (link) {
+        // Handle link submission
         const query = 'INSERT INTO files (project_id, type, link) VALUES (?, ?, ?)';
-        connectDB.query(query, [projectId, 'link', link], (err) => {
+        connectDB.query(query, [projectId, 'link', link], (err, result) => {
             if (err) {
                 console.error('Error storing link metadata in database:', err);
                 return res.status(500).json({ message: 'Error storing link metadata' });
@@ -58,11 +66,12 @@ app.post('/upload', upload.single('file'), (req, res) => {
             res.status(201).json({ message: 'Link submitted successfully' });
         });
     } else if (req.file) {
+        // Handle file upload
         const filePath = `/uploads/${req.file.filename}`;
         const filename = req.file.filename;
 
         const query = 'INSERT INTO files (project_id, type, filename, filepath) VALUES (?, ?, ?, ?)';
-        connectDB.query(query, [projectId, 'file', filename, filePath], (err) => {
+        connectDB.query(query, [projectId, 'file', filename, filePath], (err, result) => {
             if (err) {
                 console.error('Error storing file metadata in database:', err);
                 return res.status(500).json({ message: 'Error storing file metadata' });
@@ -73,6 +82,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
         res.status(400).json({ message: 'No file uploaded or link provided' });
     }
 });
+
 
 app.get('/resources', (req, res) => {
     const query = `
@@ -197,6 +207,7 @@ app.get('/projects/:id/members', (req, res) => {
         res.status(200).json(results);
     });
 });
+
 
 // User signup endpoint
 app.post('/signupsubmit', (req, res) => {
@@ -389,16 +400,17 @@ app.get('/projects', (req, res) => {
 app.get('/projects/:id', (req, res) => {
     const { id } = req.params;
 
-    const query = `
+    const projectQuery = `
         SELECT p.id, p.name, p.progress, p.goals, p.methodology,
-               GROUP_CONCAT(u.first_name, ' ', u.last_name) AS members
+               GROUP_CONCAT(u.id, ',', u.first_name, ' ', u.last_name SEPARATOR ';') AS members
         FROM projects p
-        JOIN project_members pm ON p.id = pm.project_id
-        JOIN users u ON pm.user_id = u.id
+        LEFT JOIN project_members pm ON p.id = pm.project_id
+        LEFT JOIN users u ON pm.user_id = u.id
         WHERE p.id = ?
         GROUP BY p.id
     `;
-    connectDB.query(query, [id], (error, results) => {
+
+    connectDB.query(projectQuery, [id], (error, results) => {
         if (error) {
             return res.status(500).json({ message: 'Database query failed' });
         }
@@ -408,54 +420,71 @@ app.get('/projects/:id', (req, res) => {
         }
 
         const project = results[0];
-        project.members = project.members.split(',');
+        project.members = project.members ? project.members.split(';').map(member => {
+            const [id, name] = member.split(',');
+            return { id, name };
+        }) : [];
 
         res.status(200).json(project);
     });
 });
 
+
 // Endpoint to create a project
-app.post('/projects', (req, res) => {
+app.put('/projects/:id', (req, res) => {
+    const { id } = req.params;
     const { name, progress, goals, methodology, members } = req.body;
 
     connectDB.getConnection((err, connection) => {
         if (err) {
+            console.error('Database connection failed:', err);
             return res.status(500).json({ message: 'Database connection failed' });
         }
 
-        const projectQuery = 'INSERT INTO projects (name, progress, goals, methodology) VALUES (?, ?, ?, ?)';
-        connection.query(projectQuery, [name, progress, goals, methodology], (projectError, projectResults) => {
+        const projectQuery = 'UPDATE projects SET name = ?, progress = ?, goals = ?, methodology = ? WHERE id = ?';
+        connection.query(projectQuery, [name, progress, goals, methodology, id], (projectError) => {
             if (projectError) {
+                console.error('Project update failed:', projectError);
                 connection.release();
-                return res.status(500).json({ message: 'Project creation failed' });
+                return res.status(500).json({ message: 'Project update failed' });
             }
 
-            const projectId = projectResults.insertId;
-            const memberQueries = members.map(member => {
-                return new Promise((resolve, reject) => {
-                    const memberQuery = 'INSERT INTO project_members (project_id, user_id) VALUES (?, ?)';
-                    connection.query(memberQuery, [projectId, member], (memberError) => {
-                        if (memberError) {
-                            reject(memberError);
-                        } else {
-                            resolve();
-                        }
+            const deleteMembersQuery = 'DELETE FROM project_members WHERE project_id = ?';
+            connection.query(deleteMembersQuery, [id], (deleteError) => {
+                if (deleteError) {
+                    console.error('Failed to delete old project members:', deleteError);
+                    connection.release();
+                    return res.status(500).json({ message: 'Failed to delete old project members' });
+                }
+
+                const memberQueries = members.map(member => {
+                    return new Promise((resolve, reject) => {
+                        const memberQuery = 'INSERT INTO project_members (project_id, user_id) VALUES (?, ?)';
+                        connection.query(memberQuery, [id, member], (memberError) => {
+                            if (memberError) {
+                                reject(memberError);
+                            } else {
+                                resolve();
+                            }
+                        });
                     });
                 });
-            });
 
-            Promise.all(memberQueries)
-                .then(() => {
-                    connection.release();
-                    res.status(201).json({ message: 'Project created successfully', id: projectId, name, progress, goals, methodology, members });
-                })
-                .catch(memberError => {
-                    connection.release();
-                    res.status(500).json({ message: 'Project member creation failed' });
-                });
+                Promise.all(memberQueries)
+                    .then(() => {
+                        connection.release();
+                        res.status(200).json({ message: 'Project updated successfully' });
+                    })
+                    .catch(memberError => {
+                        console.error('Project member update failed:', memberError);
+                        connection.release();
+                        res.status(500).json({ message: 'Project member update failed' });
+                    });
+            });
         });
     });
 });
+
 
 // Endpoint to edit a project
 app.put('/projects/:id', (req, res) => {
@@ -507,6 +536,28 @@ app.put('/projects/:id', (req, res) => {
         });
     });
 });
+
+// Endpoint to fetch all users (excluding admin users if needed)
+app.get('/users', (req, res) => {
+    const query = 'SELECT id, first_name, last_name FROM users WHERE isAdmin = 0'; // Adjust the query if necessary
+    connectDB.query(query, (error, results) => {
+        if (error) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+app.get('/users', (req, res) => {
+    connectDB.query('SELECT * FROM users WHERE isAdmin = 0', (error, results) => {
+        if (error) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+
 
 // Endpoint to delete a project
 app.delete('/projects/:id', (req, res) => {

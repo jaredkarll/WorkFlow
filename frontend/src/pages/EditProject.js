@@ -14,6 +14,7 @@ const EditProject = () => {
     const [userList, setUserList] = useState([]);
 
     useEffect(() => {
+        // Fetch project details
         axios.get(`http://localhost:8800/projects/${id}`)
             .then(response => {
                 const project = response.data;
@@ -21,13 +22,14 @@ const EditProject = () => {
                 setProgress(project.progress);
                 setGoals(project.goals);
                 setMethodology(project.methodology);
-                setMembers(project.members);
+                setMembers(project.members.map(member => ({ id: member.id, name: member.name })));
                 console.log('Project fetched:', project);
             })
             .catch(error => {
                 console.error('Error fetching project:', error);
             });
 
+        // Fetch user list
         axios.get('http://localhost:8800/users')
             .then(response => {
                 setUserList(response.data);
@@ -45,7 +47,7 @@ const EditProject = () => {
     };
 
     const addMember = () => {
-        setMembers([...members, '']);
+        setMembers([...members, { id: '', name: '' }]);
     };
 
     const deleteMember = (index) => {
@@ -61,7 +63,7 @@ const EditProject = () => {
                 progress,
                 goals,
                 methodology,
-                members
+                members: members.map(member => member.id)
             });
 
             if (response.status === 200) {
@@ -124,8 +126,8 @@ const EditProject = () => {
                     {members.map((member, index) => (
                         <div key={index} className="member-group">
                             <select
-                                value={member}
-                                onChange={(e) => handleMemberChange(index, e.target.value)}
+                                value={member.id}
+                                onChange={(e) => handleMemberChange(index, { id: e.target.value, name: e.target.selectedOptions[0].text })}
                                 required
                             >
                                 <option value="" disabled>Select user</option>
