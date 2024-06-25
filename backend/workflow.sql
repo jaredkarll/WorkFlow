@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Jun 24, 2024 at 05:20 PM
+-- Generation Time: Jun 25, 2024 at 02:35 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -67,7 +67,12 @@ INSERT INTO `files` (`id`, `project_id`, `filename`, `filepath`, `upload_date`, 
 (1, 2, 'Confim', '/uploads/Confim', '2024-06-23 07:57:44', 'file', NULL),
 (2, 8, 'hatdog69-message.txt', '/uploads/hatdog69-message.txt', '2024-06-24 13:18:21', 'file', NULL),
 (3, 8, NULL, NULL, '2024-06-24 13:18:28', 'link', 'https://open.spotify.com/playlist/0yd0eQ21LLD5lnMN7T05x3'),
-(4, 8, '1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '/uploads/1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '2024-06-24 13:48:38', 'file', NULL);
+(4, 8, '1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '/uploads/1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '2024-06-24 13:48:38', 'file', NULL),
+(12, 2, '1719316324906-DNG YT Banner Final.jpg', '/uploads/1719316324906-DNG YT Banner Final.jpg', '2024-06-25 11:52:04', 'file', NULL),
+(13, 2, NULL, NULL, '2024-06-25 11:52:20', 'link', 'https://chatgpt.com/c/77ab82bb-4e15-4de2-bbbb-437ece5759ea'),
+(14, 8, '1719318014381-message (1).txt', '/uploads/1719318014381-message (1).txt', '2024-06-25 12:20:14', 'file', NULL),
+(15, 2, NULL, NULL, '2024-06-25 12:22:47', 'link', 'https://chatgpt.com/c/77ab82bb-4e15-4de2-bbbb-437ece5759ea'),
+(16, 2, '1719318188908-copperhead.jpg', '/uploads/1719318188908-copperhead.jpg', '2024-06-25 12:23:08', 'file', NULL);
 
 -- --------------------------------------------------------
 
@@ -94,7 +99,7 @@ INSERT INTO `projects` (`id`, `name`, `progress`, `goals`, `methodology`) VALUES
 (5, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
 (6, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
 (7, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
-(8, 'Unilink Project', 100, NULL, NULL);
+(8, 'Unilink Project', 100, 'Dasd', 'adsa');
 
 -- --------------------------------------------------------
 
@@ -113,16 +118,11 @@ CREATE TABLE `project_members` (
 --
 
 INSERT INTO `project_members` (`id`, `project_id`, `user_id`) VALUES
-(15, 8, 1),
-(16, 8, 3),
-(17, 8, 9),
-(18, 8, 15),
-(19, 8, 12),
-(31, 2, 8),
-(32, 2, 7),
-(33, 2, 3),
-(34, 2, 5),
-(35, 2, 17);
+(44, 2, 11),
+(45, 2, 3),
+(46, 2, 18),
+(63, 8, 8),
+(64, 8, 4);
 
 -- --------------------------------------------------------
 
@@ -142,11 +142,11 @@ CREATE TABLE `subtasks` (
 --
 
 INSERT INTO `subtasks` (`id`, `task_id`, `title`, `completed`) VALUES
-(1, 1, 'Wireframe', 0),
-(2, 1, 'Prototyping', 0),
-(3, 1, 'Color Scheme', 0),
-(4, 1, 'Testing', 0),
-(5, 1, 'File Link', 0),
+(1, 1, 'Wireframe', 1),
+(2, 1, 'Prototyping', 1),
+(3, 1, 'Color Scheme', 1),
+(4, 1, 'Testing', 1),
+(5, 1, 'File Link', 1),
 (6, 2, 'Flowchart', 0),
 (7, 2, 'Use-Case Diagram', 0),
 (8, 2, 'UI Design', 0),
@@ -279,7 +279,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -291,7 +291,7 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `project_members`
 --
 ALTER TABLE `project_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `subtasks`
