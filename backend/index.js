@@ -15,7 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve s
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3307,
+    port: 3600,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -311,6 +311,82 @@ app.get('/tasks', (req, res) => {
     });
 });
 
+
+// Add this endpoint to update a task by ID
+app.put('/tasks/:id', (req, res) => {
+    const { id } = req.params;
+    const { title, assigned_to, due_date, subtasks } = req.body;
+
+    const updateTaskQuery = 'UPDATE tasks SET title = ?, assigned_to = ?, due_date = ? WHERE id = ?';
+    connectDB.query(updateTaskQuery, [title, assigned_to, due_date, id], (err, result) => {
+        if (err) {
+            console.error('Error updating task:', err);
+            return res.status(500).json({ message: 'Error updating task' });
+        }
+
+        const deleteSubtasksQuery = 'DELETE FROM subtasks WHERE task_id = ?';
+        connectDB.query(deleteSubtasksQuery, [id], (deleteErr) => {
+            if (deleteErr) {
+                console.error('Error deleting subtasks:', deleteErr);
+                return res.status(500).json({ message: 'Error deleting subtasks' });
+            }
+
+            const insertSubtasksQuery = 'INSERT INTO subtasks (task_id, title, completed) VALUES ?';
+            const subtasksData = subtasks.map(subtask => [id, subtask.title, subtask.completed]);
+
+            connectDB.query(insertSubtasksQuery, [subtasksData], (insertErr) => {
+                if (insertErr) {
+                    console.error('Error inserting subtasks:', insertErr);
+                    return res.status(500).json({ message: 'Error inserting subtasks' });
+                }
+
+                res.status(200).json({ message: 'Task updated successfully' });
+            });
+        });
+    });
+});
+
+// Add this endpoint to fetch a task by ID
+app.get('/tasks/:id', (req, res) => {
+    const { id } = req.params;
+
+    const taskQuery = `
+        SELECT t.id as task_id, t.title, t.assigned_to, t.due_date,
+               s.id as subtask_id, s.title as subtask_title, s.completed
+        FROM tasks t
+        LEFT JOIN subtasks s ON t.id = s.task_id
+        WHERE t.id = ?
+    `;
+    connectDB.query(taskQuery, [id], (err, results) => {
+        if (err) {
+            console.error('Error fetching task:', err);
+            return res.status(500).json({ message: 'Error fetching task' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        const task = {
+            id: results[0].task_id,
+            title: results[0].title,
+            assigned_to: results[0].assigned_to,
+            due_date: results[0].due_date,
+            subtasks: results.filter(row => row.subtask_id).map(row => ({
+                id: row.subtask_id,
+                title: row.subtask_title,
+                completed: row.completed
+            }))
+        };
+
+        res.status(200).json(task);
+    });
+});
+
+
+
+
+
 // Endpoint to update subtask status
 app.put('/subtasks/:id', (req, res) => {
     const { id } = req.params;
@@ -368,33 +444,98 @@ app.post('/tasks', (req, res) => {
     });
 });
 
-// Endpoint to fetch projects
+
+// Endpoint to delete a task
+app.delete('/tasks/:id', (req, res) => {
+    const { id } = req.params;
+
+    const deleteSubtasksQuery = 'DELETE FROM subtasks WHERE task_id = ?';
+    const deleteTaskQuery = 'DELETE FROM tasks WHERE id = ?';
+
+    connectDB.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection failed' });
+        }
+
+        connection.beginTransaction((err) => {
+            if (err) {
+                connection.release();
+                return res.status(500).json({ message: 'Transaction failed' });
+            }
+
+            connection.query(deleteSubtasksQuery, [id], (subtaskError) => {
+                if (subtaskError) {
+                    connection.rollback(() => {
+                        connection.release();
+                        return res.status(500).json({ message: 'Failed to delete subtasks' });
+                    });
+                } else {
+                    connection.query(deleteTaskQuery, [id], (taskError) => {
+                        if (taskError) {
+                            connection.rollback(() => {
+                                connection.release();
+                                return res.status(500).json({ message: 'Failed to delete task' });
+                            });
+                        } else {
+                            connection.commit((commitError) => {
+                                if (commitError) {
+                                    connection.rollback(() => {
+                                        connection.release();
+                                        return res.status(500).json({ message: 'Commit failed' });
+                                    });
+                                } else {
+                                    connection.release();
+                                    return res.status(200).json({ message: 'Task deleted successfully' });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+});
+
+
+
 app.get('/projects', (req, res) => {
-    const query = `
-        SELECT p.id, p.name, p.progress, p.goals, p.methodology,
-               GROUP_CONCAT(u.first_name, ' ', u.last_name) AS members
-        FROM projects p
-        JOIN project_members pm ON p.id = pm.project_id
-        JOIN users u ON pm.user_id = u.id
-        GROUP BY p.id
-    `;
+    const query = 'SELECT id, name FROM projects';
     connectDB.query(query, (error, results) => {
         if (error) {
             return res.status(500).json({ message: 'Database query failed' });
         }
-
-        const projects = results.map(project => ({
-            id: project.id,
-            name: project.name,
-            progress: project.progress,
-            goals: project.goals,
-            methodology: project.methodology,
-            members: project.members.split(',')
-        }));
-
-        res.status(200).json(projects);
+        res.status(200).json(results);
     });
 });
+
+
+// Endpoint to fetch projects
+// app.get('/projects', (req, res) => {
+//     const query = `
+//         SELECT p.id, p.name, p.progress, p.goals, p.methodology,
+//                GROUP_CONCAT(u.first_name, ' ', u.last_name) AS members
+//         FROM projects p
+//         JOIN project_members pm ON p.id = pm.project_id
+//         JOIN users u ON pm.user_id = u.id
+//         GROUP BY p.id
+//     `;
+//     connectDB.query(query, (error, results) => {
+//         if (error) {
+//             return res.status(500).json({ message: 'Database query failed' });
+//         }
+
+//         const projects = results.map(project => ({
+//             id: project.id,
+//             name: project.name,
+//             progress: project.progress,
+//             goals: project.goals,
+//             methodology: project.methodology,
+//             members: project.members.split(',')
+//         }));
+
+//         res.status(200).json(projects);
+//     });
+// });
 
 // Endpoint to fetch project details
 app.get('/projects/:id', (req, res) => {
@@ -428,6 +569,7 @@ app.get('/projects/:id', (req, res) => {
         res.status(200).json(project);
     });
 });
+
 
 
 // Endpoint to create a project
@@ -539,7 +681,7 @@ app.put('/projects/:id', (req, res) => {
 
 // Endpoint to fetch all users (excluding admin users if needed)
 app.get('/users', (req, res) => {
-    const query = 'SELECT id, first_name, last_name FROM users WHERE isAdmin = 0'; // Adjust the query if necessary
+    const query = 'SELECT id, first_name, last_name, email FROM users WHERE isAdmin = 0'; // Adjust the query if necessary
     connectDB.query(query, (error, results) => {
         if (error) {
             return res.status(500).json({ message: 'Database query failed' });

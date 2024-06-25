@@ -34,10 +34,18 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    position: relative;
 }
 
 .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
+}
+
+.task-header-info {
+    flex-grow: 1;
 }
 
 .task-header h3 {
@@ -62,6 +70,7 @@
 .task-buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .task-button {
@@ -98,4 +107,38 @@
 .task-button.view-file:hover {
     background-color: #007bff;
     color: #fff;
+}
+
+.three-dots-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.task-options {
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.task-options button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+}
+
+.task-options button:hover {
+    background-color: #0056b3;
 }

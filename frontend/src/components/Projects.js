@@ -69,7 +69,7 @@ const Projects = () => {
                         <div className="project-column">{project.name}</div>
                         <div className="members-column">
                             {(project.members || []).map((member, index) => (
-                                <div key={index}>{member}</div>
+                                <div key={index}>{member.name}</div>
                             ))}
                         </div>
                         <div className="progress-column">

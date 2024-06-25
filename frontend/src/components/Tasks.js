@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Tasks.css';
+import threeDotsIcon from '../assets/three-dots-icon.png'; // Update the path as necessary
 
 const Tasks = () => {
     const [tasks, setTasks] = useState([]);
+    const [showOptions, setShowOptions] = useState({});
+
     const history = useHistory();
 
     useEffect(() => {
@@ -41,6 +44,24 @@ const Tasks = () => {
         return subtasks.every(subtask => subtask.completed);
     };
 
+    const handleEditTask = (taskId) => {
+        history.push(`/edit-task/${taskId}`);
+    };
+
+    const handleDeleteTask = (taskId) => {
+        axios.delete(`http://localhost:8800/tasks/${taskId}`)
+            .then(() => {
+                setTasks(tasks.filter(task => task.id !== taskId));
+            })
+            .catch(error => {
+                console.error('Error deleting task:', error);
+            });
+    };
+
+    const toggleOptions = (taskId) => {
+        setShowOptions({ ...showOptions, [taskId]: !showOptions[taskId] });
+    };
+
     return (
         <div className="tasks-container">
             <h2>Tasks</h2>
@@ -49,9 +70,23 @@ const Tasks = () => {
                 {tasks.map(task => (
                     <div key={task.id} className="task-card">
                         <div className="task-header">
-                            <h3>{task.title}</h3>
-                            <p>Assigned to: {task.assigned_to}</p>
-                            <p>{new Date(task.due_date).toLocaleDateString()}</p>
+                            <div className="task-header-info">
+                                <h3>{task.title}</h3>
+                                <p>Assigned to: {task.assigned_to}</p>
+                                <p>{new Date(task.due_date).toLocaleDateString()}</p>
+                            </div>
+                            <img
+                                src={threeDotsIcon}
+                                alt="Options"
+                                className="three-dots-icon"
+                                onClick={() => toggleOptions(task.id)}
+                            />
+                            {showOptions[task.id] && (
+                                <div className="task-options">
+                                    <button onClick={() => handleEditTask(task.id)}>Edit</button>
+                                    <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+                                </div>
+                            )}
                         </div>
                         <div className="subtasks-list">
                             {task.subtasks.map(subtask => (

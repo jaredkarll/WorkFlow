@@ -7,7 +7,9 @@ const CreateTask = () => {
     const [taskName, setTaskName] = useState('');
     const [subTasks, setSubTasks] = useState(['']);
     const [assignedTo, setAssignedTo] = useState('');
+    const [projectId, setProjectId] = useState('');
     const [users, setUsers] = useState([]);
+    const [projects, setProjects] = useState([]);
     const history = useHistory();
 
     useEffect(() => {
@@ -17,6 +19,14 @@ const CreateTask = () => {
             })
             .catch(error => {
                 console.error('Error fetching users:', error);
+            });
+
+        axios.get('http://localhost:8800/projects')
+            .then(response => {
+                setProjects(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching projects:', error);
             });
     }, []);
 
@@ -42,6 +52,7 @@ const CreateTask = () => {
             const response = await axios.post('http://localhost:8800/tasks', {
                 title: taskName,
                 assigned_to: assignedTo,
+                project_id: projectId,
                 subtasks: subTasks
             });
 
@@ -66,7 +77,7 @@ const CreateTask = () => {
             <div className="create-task-container">
                 <h2>Create New Task</h2>
                 <form onSubmit={handleSubmit}>
-                    <button onClick={handleReturn} className="return-button">Return to Tasks</button>
+                    <button type="button" onClick={handleReturn} className="return-button">Return to Tasks</button>
                     <div className="form-group">
                         <label>Task Name</label>
                         <input
@@ -98,14 +109,23 @@ const CreateTask = () => {
                         <select value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} required>
                             <option value="" disabled>Select user</option>
                             {users.map(user => (
-                                <option key={user.id} value={user.email}>{user.email}</option>
+                                <option key={user.id} value={user.id}>{`${user.first_name} ${user.last_name}`}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Project</label>
+                        <select value={projectId} onChange={(e) => setProjectId(e.target.value)} required>
+                            <option value="" disabled>Select project</option>
+                            {projects.map(project => (
+                                <option key={project.id} value={project.id}>{project.name}</option>
                             ))}
                         </select>
                     </div>
 
                     <button type="submit">Create Task</button>
                 </form>
-
             </div>
         </div>
     );

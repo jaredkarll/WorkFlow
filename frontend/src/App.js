@@ -17,6 +17,7 @@ import CreateTask from "./pages/CreateTask";
 import EditProject from "./pages/EditProject";
 import ProjectDetails from "./pages/ProjectDetails";
 import Resources from "./components/Resources";
+import EditTask from "./pages/EditTask";
 
 export const AuthContext = React.createContext();
 
@@ -37,12 +38,13 @@ function App() {
                         <Route path="/userdashboard" component={UserDashboard} />
                         <Route path="/report" exact component={UserSubmitReport} />
                         <Route path="/report/:id" exact component={ViewDetailedReport} />
-                        <Route path="/admindash" exact component={AdminDashboard} />
+                        <Route path="/admindashboard" exact component={AdminDashboard} />
                         <Route path="/reportdispatch/:id" exact component={AdminReportDispatch} />
                         <Route path="/createtask" exact component={CreateTask} />
                         <Route path="/project/:id" exact component={ProjectDetails} />
-                        <Route path="/edit-project/:id" exact component={EditProject} /> {/* Ensure this route is correctly defined */}
+                        <Route path="/edit-project/:id" exact component={EditProject} />
                         <Route path="/resources" exact component={Resources} />
+                        <Route path="/edit-task/:id" exact component={EditTask} /> {/* New route */}
                     </Switch>
                     <Footer />
                 </Router>

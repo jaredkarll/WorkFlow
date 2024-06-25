@@ -1,0 +1,114 @@
+/* src/styles/EditTask.css */
+.edit-task-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1f1f1;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-group button[type="button"] {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+
+.form-group button[type="button"]:hover {
+    background-color: #cc0000;
+}
+
+.return-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+
+.return-button:hover {
+    background-color: #0056b3;
+}
+
+.subtask-group,
+.member-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.subtask-group input[type="text"],
+.member-group select {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.subtask-group button[type="button"],
+.member-group button[type="button"] {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+
+.subtask-group button[type="button"]:hover,
+.member-group button[type="button"]:hover {
+    background-color: #cc0000;
+}
+
+button[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: #ff0000;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
