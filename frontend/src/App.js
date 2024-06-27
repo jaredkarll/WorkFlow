@@ -18,15 +18,17 @@ import EditProject from "./pages/EditProject";
 import ProjectDetails from "./pages/ProjectDetails";
 import Resources from "./components/Resources";
 import EditTask from "./pages/EditTask";
+import CreateAnnouncement from "./pages/CreateAnnouncement";
 
 export const AuthContext = React.createContext();
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
 
     return (
         <div className="App">
-            <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+            <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser}}>
                 <Router>
                     <Navbar />
                     <Switch>
@@ -44,7 +46,8 @@ function App() {
                         <Route path="/project/:id" exact component={ProjectDetails} />
                         <Route path="/edit-project/:id" exact component={EditProject} />
                         <Route path="/resources" exact component={Resources} />
-                        <Route path="/edit-task/:id" exact component={EditTask} /> {/* New route */}
+                        <Route path="/edit-task/:id" exact component={EditTask} />
+                        <Route path="/create-announcement" exact component={CreateAnnouncement} /> {/* Add the new route */}
                     </Switch>
                     <Footer />
                 </Router>

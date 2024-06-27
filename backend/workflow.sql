@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3600
--- Generation Time: Jun 25, 2024 at 04:32 PM
+-- Generation Time: Jun 27, 2024 at 04:55 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,7 +41,9 @@ CREATE TABLE `announcements` (
 
 INSERT INTO `announcements` (`id`, `title`, `content`, `author_id`, `date`) VALUES
 (1, 'Welcome to MGHS!', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur suscipit dictum justo, eget sollicitudin purus viverra sit amet. Curabitur a eleifend justo, vitae congue turpis. Mauris eget ipsum nibh.', 1, '2024-06-20 13:50:05'),
-(2, 'Mabuhay mga Kababayan!', 'This is it!', 1, '2024-06-22 04:53:48');
+(2, 'Mabuhay mga Kababayan!', 'This is it!', 1, '2024-06-22 04:53:48'),
+(3, 'Testing', 'CALL ME KELVIN', 3, '2024-06-27 14:43:38'),
+(4, 'Testing 2', 'Calvin Klein', 3, '2024-06-27 14:45:11');
 
 -- --------------------------------------------------------
 
@@ -66,12 +68,10 @@ CREATE TABLE `files` (
 INSERT INTO `files` (`id`, `project_id`, `filename`, `filepath`, `upload_date`, `type`, `link`) VALUES
 (1, 2, 'Confim', '/uploads/Confim', '2024-06-23 07:57:44', 'file', NULL),
 (2, 8, 'hatdog69-message.txt', '/uploads/hatdog69-message.txt', '2024-06-24 13:18:21', 'file', NULL),
-(3, 8, NULL, NULL, '2024-06-24 13:18:28', 'link', 'https://open.spotify.com/playlist/0yd0eQ21LLD5lnMN7T05x3'),
 (4, 8, '1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '/uploads/1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '2024-06-24 13:48:38', 'file', NULL),
 (12, 2, '1719316324906-DNG YT Banner Final.jpg', '/uploads/1719316324906-DNG YT Banner Final.jpg', '2024-06-25 11:52:04', 'file', NULL),
 (13, 2, NULL, NULL, '2024-06-25 11:52:20', 'link', 'https://chatgpt.com/c/77ab82bb-4e15-4de2-bbbb-437ece5759ea'),
 (14, 8, '1719318014381-message (1).txt', '/uploads/1719318014381-message (1).txt', '2024-06-25 12:20:14', 'file', NULL),
-(15, 2, NULL, NULL, '2024-06-25 12:22:47', 'link', 'https://chatgpt.com/c/77ab82bb-4e15-4de2-bbbb-437ece5759ea'),
 (16, 2, '1719318188908-copperhead.jpg', '/uploads/1719318188908-copperhead.jpg', '2024-06-25 12:23:08', 'file', NULL);
 
 -- --------------------------------------------------------
@@ -94,11 +94,8 @@ CREATE TABLE `projects` (
 
 INSERT INTO `projects` (`id`, `name`, `progress`, `goals`, `methodology`) VALUES
 (2, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, 'Matapos na to and makapag japan', 'Di ko alam'),
-(3, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
-(4, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
-(5, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
-(6, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
-(7, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, NULL, NULL),
+(3, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 100, 'hehe', 'hehe'),
+(4, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, 'SARAP', 'IDK'),
 (8, 'Unilink Project', 100, 'Dasd', 'adsa');
 
 -- --------------------------------------------------------
@@ -122,7 +119,9 @@ INSERT INTO `project_members` (`id`, `project_id`, `user_id`) VALUES
 (45, 2, 3),
 (46, 2, 18),
 (63, 8, 8),
-(64, 8, 4);
+(64, 8, 4),
+(67, 4, 11),
+(68, 3, 7);
 
 -- --------------------------------------------------------
 
@@ -193,8 +192,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `email`, `first_name`, `last_name`, `password`, `created_at`, `isAdmin`) VALUES
 (1, 'testing@gmail.com', 'Jonel', 'Meow', '1234', '2024-06-16 08:34:12', 0),
-(3, 'cardo@mail.com', 'Cardo', 'Dalisay', '5678', '2024-06-20 11:42:57', 0),
-(4, 'admin@example.com', 'Admin', 'User', 'password', '2024-06-20 13:49:44', 0),
+(3, 'cardo@mail.com', 'Cardo', 'Dalisay', '5678', '2024-06-20 11:42:57', 1),
+(4, 'admin@example.com', 'Admin', 'User', 'password', '2024-06-20 13:49:44', 1),
 (5, 'john.doe@example.com', 'John', 'Doe', 'password123', '2024-06-22 05:06:13', 0),
 (6, 'jane.smith@example.com', 'Jane', 'Smith', 'password123', '2024-06-22 05:06:13', 1),
 (7, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:23:58', 0),
@@ -269,13 +268,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -287,7 +286,7 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `project_members`
 --
 ALTER TABLE `project_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `subtasks`

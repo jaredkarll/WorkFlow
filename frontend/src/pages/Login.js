@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
 function Login() {
-    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, setIsLoggedIn, setUser } = useContext(AuthContext);
     const history = useHistory();
     const [formData, setFormData] = useState({
         email: '',
@@ -28,10 +28,14 @@ function Login() {
     const handleSubmit = () => {
         axios.post('http://localhost:8800/loginsubmit', formData)
             .then(response => {
-                console.log(response.data);
-                alert('You have successfully logged in!');
+                const { user } = response.data;
                 setIsLoggedIn(true);
-                history.push('/userdashboard');
+                setUser(user);
+                if (user.isAdmin) {
+                    history.push('/admindashboard');
+                } else {
+                    history.push('/userdashboard');
+                }
             })
             .catch(error => {
                 console.error('Error logging in:', error);

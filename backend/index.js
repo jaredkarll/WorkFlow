@@ -229,12 +229,14 @@ app.post('/loginsubmit', (req, res) => {
             return res.status(500).json({ message: 'Database query failed' });
         }
         if (results.length > 0) {
-            return res.status(200).json({ message: 'Login successful', user: results[0] });
+            const user = results[0];
+            return res.status(200).json({ message: 'Login successful', user });
         } else {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
     });
 });
+
 
 // Endpoint to fetch announcements
 app.get('/announcements', (req, res) => {
@@ -247,18 +249,31 @@ app.get('/announcements', (req, res) => {
     });
 });
 
+
 // Endpoint to create an announcement
 app.post('/announcements', (req, res) => {
     const { title, content, authorId } = req.body;
 
-    const query = 'INSERT INTO announcements (title, content, author_id) VALUES (?, ?, ?)';
-    connectDB.query(query, [title, content, authorId], (error) => {
-        if (error) {
+    // First, verify if the user is an admin
+    const checkAdminQuery = 'SELECT isAdmin FROM users WHERE id = ?';
+    connectDB.query(checkAdminQuery, [authorId], (err, results) => {
+        if (err) {
             return res.status(500).json({ message: 'Database query failed' });
         }
-        res.status(201).json({ message: 'Announcement created successfully' });
+        if (results[0].isAdmin) {
+            const query = 'INSERT INTO announcements (title, content, author_id) VALUES (?, ?, ?)';
+            connectDB.query(query, [title, content, authorId], (error) => {
+                if (error) {
+                    return res.status(500).json({ message: 'Database query failed' });
+                }
+                res.status(201).json({ message: 'Announcement created successfully' });
+            });
+        } else {
+            res.status(403).json({ message: 'Unauthorized' });
+        }
     });
 });
+
 
 // Endpoint to handle forgotten password
 app.put('/forgotpassword', (req, res) => {

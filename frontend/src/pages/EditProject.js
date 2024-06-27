@@ -68,7 +68,7 @@ const EditProject = () => {
 
             if (response.status === 200) {
                 alert('Project updated successfully');
-                history.push('/userdashboard');
+                history.push('/userdashboard/projects');
             } else {
                 alert('Failed to update project');
             }

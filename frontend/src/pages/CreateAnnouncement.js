@@ -1,43 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../App';
+import { useHistory } from 'react-router-dom';
 import '../styles/CreateAnnouncement.css';
 
 const CreateAnnouncement = () => {
+    const { user } = useContext(AuthContext);
+    const history = useHistory();
     const [formData, setFormData] = useState({
         title: '',
-        content: ''
+        content: '',
+        authorId: user ? user.id : null
     });
+
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const { title, content } = formData;
-            const authorId = 1; // Replace with actual logged-in admin ID
-            await axios.post('http://localhost:8800/announcements', { title, content, authorId });
-            alert('Announcement created successfully!');
-            window.location.href = '/admindash';
-        } catch (error) {
-            console.error('Error creating announcement:', error);
-            alert('Failed to create announcement.');
-        }
+        axios.post('http://localhost:8800/announcements', formData)
+            .then(response => {
+                alert('Announcement created successfully!');
+                history.push('/admindashboard');
+            })
+            .catch(error => {
+                console.error('Error creating announcement:', error);
+                setError('Error creating announcement: ' + (error.response?.data?.message || 'Unknown error'));
+            });
     };
 
     return (
-        <div>
-            <h2>Create Announcement</h2>
+        <div className="create-announcement-container">
             <form onSubmit={handleSubmit}>
-                <div>
+                <h2>Create Announcement</h2>
+
+                <div className="input-box">
                     <label>Title</label>
-                    <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+                    <input
+                        type="text"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
-                <div>
+
+                <div className="input-box">
                     <label>Content</label>
-                    <textarea name="content" value={formData.content} onChange={handleChange} required />
+                    <textarea
+                        name="content"
+                        value={formData.content}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
+
+                {error && <div className="error">{error}</div>}
+
                 <button type="submit">Create Announcement</button>
             </form>
         </div>
