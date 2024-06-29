@@ -15,7 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3600,
+    port: 3307,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -237,7 +237,6 @@ app.post('/loginsubmit', (req, res) => {
     });
 });
 
-
 // Endpoint to fetch announcements
 app.get('/announcements', (req, res) => {
     const query = 'SELECT a.*, u.first_name, u.last_name FROM announcements a LEFT JOIN users u ON a.author_id = u.id ORDER BY date DESC';
@@ -248,7 +247,6 @@ app.get('/announcements', (req, res) => {
         res.status(200).json(results);
     });
 });
-
 
 // Endpoint to create an announcement
 app.post('/announcements', (req, res) => {
@@ -273,7 +271,6 @@ app.post('/announcements', (req, res) => {
         }
     });
 });
-
 
 // Endpoint to handle forgotten password
 app.put('/forgotpassword', (req, res) => {
@@ -651,6 +648,91 @@ app.get('/users', (req, res) => {
             return res.status(500).json({ message: 'Database query failed' });
         }
         res.status(200).json(results);
+    });
+});
+
+// Endpoint to create a new user (admin only)
+app.post('/createuser', (req, res) => {
+    const { firstName, lastName, email, password, isAdmin, userId } = req.body;
+
+    // Verify if the user is an admin
+    const checkAdminQuery = 'SELECT isAdmin FROM users WHERE id = ?';
+    connectDB.query(checkAdminQuery, [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        if (results.length > 0 && results[0].isAdmin) {
+            const query = 'INSERT INTO users (first_name, last_name, email, password, isAdmin) VALUES (?, ?, ?, ?, ?)';
+            connectDB.query(query, [firstName, lastName, email, password, isAdmin], (error) => {
+                if (error) {
+                    return res.status(500).json({ message: 'Database query failed' });
+                }
+                res.status(201).json({ message: 'User created successfully' });
+            });
+        } else {
+            res.status(403).json({ message: 'Unauthorized' });
+        }
+    });
+});
+
+// Endpoint to update a user (admin only)
+app.put('/updateuser/:id', (req, res) => {
+    const { id } = req.params;
+    const { firstName, lastName, email, password, isAdmin, userId } = req.body; // userId is the admin's user ID
+
+    // Verify if the user is an admin
+    const checkAdminQuery = 'SELECT isAdmin FROM users WHERE id = ?';
+    connectDB.query(checkAdminQuery, [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        if (results.length > 0 && results[0].isAdmin) {
+            const query = 'UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ? WHERE id = ?';
+            connectDB.query(query, [firstName, lastName, email, password, isAdmin, id], (error) => {
+                if (error) {
+                    return res.status(500).json({ message: 'Database query failed' });
+                }
+                res.status(200).json({ message: 'User updated successfully' });
+            });
+        } else {
+            res.status(403).json({ message: 'Unauthorized' });
+        }
+    });
+});
+
+// Endpoint to fetch all users
+app.get('/users', (req, res) => {
+    const query = 'SELECT id, first_name, last_name, email, isAdmin FROM users';
+    connectDB.query(query, (error, results) => {
+        if (error) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Endpoint to delete a user (admin only)
+app.delete('/deleteuser/:id', (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.body; // Admin's user ID
+
+    // Verify if the user is an admin
+    const checkAdminQuery = 'SELECT isAdmin FROM users WHERE id = ?';
+    connectDB.query(checkAdminQuery, [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        if (results.length > 0 && results[0].isAdmin) {
+            const query = 'DELETE FROM users WHERE id = ?';
+            connectDB.query(query, [id], (error) => {
+                if (error) {
+                    return res.status(500).json({ message: 'Database query failed' });
+                }
+                res.status(200).json({ message: 'User deleted successfully' });
+            });
+        } else {
+            res.status(403).json({ message: 'Unauthorized' });
+        }
     });
 });
 

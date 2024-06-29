@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { AuthContext } from "../App";
+import AuthContext from '../AuthContext'; //
 import Logo from "../assets/WorkFlow Logo-2.svg";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import ReorderIcon from "@material-ui/icons/Reorder";

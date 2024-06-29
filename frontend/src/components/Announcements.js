@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../App'; // Import the context to use the logged-in user's info
+import AuthContext from '../AuthContext'; // // Import the context to use the logged-in user's info
 import '../styles/Announcements.css';
 
 const Announcements = () => {

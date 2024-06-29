@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../App';
+import AuthContext from '../AuthContext'; //
 import { useHistory } from 'react-router-dom';
 import '../styles/CreateAnnouncement.css';
 

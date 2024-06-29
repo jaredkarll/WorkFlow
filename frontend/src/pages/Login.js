@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../App';
+import AuthContext from '../AuthContext'; //
 import LoginBannerImage from "../assets/teamwork-login.png";
 import styles from "../styles/Login.module.css"; // Ensure this path is correct and points to the correct CSS file
 import axios from 'axios';
