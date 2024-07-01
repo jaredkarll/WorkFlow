@@ -15,7 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3307,
+    port: 3306,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -733,6 +733,21 @@ app.delete('/deleteuser/:id', (req, res) => {
         } else {
             res.status(403).json({ message: 'Unauthorized' });
         }
+    });
+});
+
+// Updated backend code to handle user profile update without email
+app.put('/updateprofile/:id', (req, res) => {
+    const { id } = req.params;
+    const { first_name, last_name, password } = req.body;
+
+    const query = 'UPDATE users SET first_name = ?, last_name = ?, password = ? WHERE id = ?';
+    connectDB.query(query, [first_name, last_name, password, id], (error, results) => {
+        if (error) {
+            console.error('Error updating profile:', error);
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        res.status(200).json({ message: 'Profile updated successfully' });
     });
 });
 

@@ -4,7 +4,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import Contact from "./pages/Contact";
+import Profile from "./pages/ProfilePage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import UserSubmitReport from "./pages/UserSubmitReport";
@@ -35,7 +35,7 @@ function App() {
                     <Navbar />
                     <Switch>
                         <Route path="/" exact component={Home} />
-                        <Route path="/contact" exact component={Contact} />
+                        <Route path="/profile" exact component={Profile} />
                         <Route path="/signup" exact component={Signup} />
                         <Route path="/login" exact component={Login} />
                         <Route path="/forgotpassword" exact component={ForgotPassword} />

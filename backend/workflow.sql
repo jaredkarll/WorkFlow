@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: Jun 29, 2024 at 05:19 PM
+-- Host: 127.0.0.1
+-- Generation Time: Jul 01, 2024 at 03:41 PM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,8 +40,8 @@ CREATE TABLE `announcements` (
 --
 
 INSERT INTO `announcements` (`id`, `title`, `content`, `author_id`, `date`) VALUES
-(1, 'Welcome to MGHS!', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur suscipit dictum justo, eget sollicitudin purus viverra sit amet. Curabitur a eleifend justo, vitae congue turpis. Mauris eget ipsum nibh.', 1, '2024-06-20 13:50:05'),
-(2, 'Mabuhay mga Kababayan!', 'This is it!', 1, '2024-06-22 04:53:48'),
+(1, 'Welcome to MGHS!', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur suscipit dictum justo, eget sollicitudin purus viverra sit amet. Curabitur a eleifend justo, vitae congue turpis. Mauris eget ipsum nibh.', NULL, '2024-06-20 13:50:05'),
+(2, 'Mabuhay mga Kababayan!', 'This is it!', NULL, '2024-06-22 04:53:48'),
 (3, 'Testing', 'CALL ME KELVIN', 3, '2024-06-27 14:43:38'),
 (4, 'Testing 2', 'Calvin Klein', 3, '2024-06-27 14:45:11');
 
@@ -191,10 +191,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `first_name`, `last_name`, `password`, `created_at`, `isAdmin`) VALUES
-(1, 'testing@gmail.com', 'Jonel', 'Meow', '1234', '2024-06-16 08:34:12', 0),
 (3, 'cardo@mail.com', 'Cardo', 'Dalisay', '5678', '2024-06-20 11:42:57', 1),
 (4, 'admin@example.com', 'Admin', 'User', 'password', '2024-06-20 13:49:44', 1),
-(5, 'john.doe@example.com', 'John', 'Doe', 'password123', '2024-06-22 05:06:13', 0),
+(5, 'john.doe@example.com', 'John', 'Doe', '1234', '2024-06-22 05:06:13', 0),
 (6, 'jane.smith@example.com', 'Jane', 'Smith', 'password123', '2024-06-22 05:06:13', 1),
 (7, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:23:58', 0),
 (8, 'fearless@example.com', 'Fearless', '', 'password', '2024-06-22 12:23:58', 0),

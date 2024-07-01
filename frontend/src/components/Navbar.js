@@ -42,7 +42,7 @@ function Navbar() {
       </div>
       <div className="rightSide">
         <Link to="/"> Home </Link>
-        {isLoggedIn && <Link to="/contact"> Profile </Link>}
+        {isLoggedIn && <Link to="/profile"> Profile </Link>}
         <button
           className={isLoggedIn ? "loggedInButton" : "signupButton"}
           onClick={handleAuthButtonClick}
