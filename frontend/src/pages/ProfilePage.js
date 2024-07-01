@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import '../styles/ProfilePage.css';
-import AuthContext from '../AuthContext'; // // Import AuthContext
+import AuthContext from '../AuthContext'; // Import AuthContext
 
 const ProfilePage = () => {
     const { user, setUser } = useContext(AuthContext);
@@ -50,7 +50,7 @@ const ProfilePage = () => {
                     <p><strong>First Name:</strong> {user.first_name}</p>
                     <p><strong>Last Name:</strong> {user.last_name}</p>
                     <p><strong>Email:</strong> {user.email}</p>
-                    <button onClick={() => setEditMode(true)}>Edit Profile</button>
+                    <button onClick={() => setEditMode(true)} className="edit-button">Edit Profile</button>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className="profile-edit-form">
@@ -84,8 +84,10 @@ const ProfilePage = () => {
                             placeholder="Enter new password"
                         />
                     </div>
-                    <button type="submit">Save Changes</button>
-                    <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+                    <div className="button-group">
+                        <button type="submit">Save Changes</button>
+                        <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+                    </div>
                 </form>
             )}
         </div>

@@ -1,10 +1,13 @@
 .profile-page-container {
     max-width: 600px;
+    width: 100%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+    text-align: center;
 }
 
 h2 {
@@ -15,32 +18,17 @@ h2 {
 .profile-details, .profile-edit-form {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .profile-details p {
     margin: 10px 0;
 }
 
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-    margin-right: 10px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
 .input-box {
     margin-bottom: 15px;
-    width: 100%;
+    width: 80%;
+    text-align: left;
 }
 
 .input-box label {
@@ -57,10 +45,34 @@ button:hover {
     font-size: 16px;
 }
 
+button {
+    padding: 10px 20px;
+    background-color: #ffc400;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    width: 48%;
+    margin-top: 15px; /* Ensure spacing between buttons and input fields */
+}
+
+button:hover {
+    background-color: #b30000;
+}
+
 button[type="button"] {
     background-color: #6c757d;
 }
 
 button[type="button"]:hover {
     background-color: #5a6268;
+}
+
+.edit-button {
+    background-color: #2b85d4;
+}
+
+.edit-button:hover {
+    background-color: #2b85d4;
 }
