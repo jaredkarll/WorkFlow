@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jul 01, 2024 at 03:41 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Host: localhost:3600
+-- Generation Time: Jul 02, 2024 at 05:00 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -193,22 +193,14 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `email`, `first_name`, `last_name`, `password`, `created_at`, `isAdmin`) VALUES
 (3, 'cardo@mail.com', 'Cardo', 'Dalisay', '5678', '2024-06-20 11:42:57', 1),
 (4, 'admin@example.com', 'Admin', 'User', 'password', '2024-06-20 13:49:44', 1),
-(5, 'john.doe@example.com', 'John', 'Doe', '1234', '2024-06-22 05:06:13', 0),
 (6, 'jane.smith@example.com', 'Jane', 'Smith', 'password123', '2024-06-22 05:06:13', 1),
 (7, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:23:58', 0),
 (8, 'fearless@example.com', 'Fearless', '', 'password', '2024-06-22 12:23:58', 0),
-(10, 'red@example.com', 'Red', '', 'password', '2024-06-22 12:23:58', 0),
 (11, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:24:53', 0),
-(12, 'fearless@example.com', 'Fearless', '', 'password', '2024-06-22 12:24:53', 0),
-(13, 'speaknow@example.com', 'Speak', 'Now', 'password', '2024-06-22 12:24:53', 0),
-(14, 'red@example.com', 'Red', '', 'password', '2024-06-22 12:24:53', 0),
 (15, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:26:19', 0),
-(16, 'fearless@example.com', 'Fearless', '', 'password', '2024-06-22 12:26:19', 0),
 (17, 'speaknow@example.com', 'Speak', 'Now', 'password', '2024-06-22 12:26:19', 0),
 (18, 'red@example.com', 'Red', '', 'password', '2024-06-22 12:26:19', 0),
-(19, 'hatdog@123.com', 'hatdogmaster', 'sixty-nine', '134', '2024-06-29 14:22:11', 0),
-(20, 'adsa@ytyt.com', 'sas', 'adsas', 'asd', '2024-06-29 14:38:47', 1),
-(21, '69@420.com', 'hatdog', 'hatdog', '12345', '2024-06-29 15:13:52', 0);
+(20, 'adsa@ytyt.com', 'sas', 'adsas', 'asd', '2024-06-29 14:38:47', 1);
 
 --
 -- Indexes for dumped tables
@@ -305,7 +297,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables

@@ -111,7 +111,7 @@ h2 {
     font-style: italic;
 }
 
-button {
+button .createAccountButton {
     width: 100%;
     margin-top: 2em;
     margin-bottom: 2em;
@@ -125,7 +125,7 @@ button {
     color: white;
 }
 
-button:hover {
+button:hover .createAccountButton {
     background: lightblue;
     outline: 2px solid navy;
     color: black;

@@ -1,0 +1,79 @@
+.create-user-page {
+    position: relative;
+}
+
+.return-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.return-button:hover {
+    background-color: #0056b3;
+}
+
+.profile-page-container {
+    max-width: 600px;
+    width: 100%;
+    margin: 50px auto;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+    text-align: center;
+}
+
+.createUserHeader {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-edit-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-box {
+    margin-bottom: 15px;
+    width: 80%;
+    text-align: left;
+}
+
+.input-box label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.createUserSubmitButton {
+    padding: 10px 20px;
+    background-color: #ffc400;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    width: 48%;
+    margin-top: 15px; /* Ensure spacing between buttons and input fields */
+}
+
+.createUserSubmitButton:hover {
+    background-color: #b30000;
+}

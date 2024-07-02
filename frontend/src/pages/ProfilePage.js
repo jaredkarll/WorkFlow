@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import '../styles/ProfilePage.css';
+import '../styles/ProfilePage.module.css';
 import AuthContext from '../AuthContext'; // Import AuthContext
 
 const ProfilePage = () => {
@@ -30,7 +29,6 @@ const ProfilePage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:8800/updateprofile/${user.id}`, formData);
             setUser({ ...user, ...formData });
             setEditMode(false);
         } catch (error) {

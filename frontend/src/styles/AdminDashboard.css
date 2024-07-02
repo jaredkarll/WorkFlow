@@ -1,3 +1,21 @@
+.main-layout {
+    display: flex;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.announcements-section {
+    margin-bottom: 20px;
+}
+
+.reports-container {
+    margin-top: 20px;
+}
+
+
 .admin-dashboard-container {
     display: flex;
     justify-content: space-between;
@@ -92,62 +110,3 @@
     text-decoration: none;
 }
 
-/* Only works if you set the option value of the drop down menu in AdminReportDispatch.js as the same values set below */
-/* .status-tag {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.status-tag.default {
-    background-color: #ccc;
-    color: #000;
-}
-
-.status-tag.in-progress {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.status-tag.completed {
-    background-color: #28a745;
-    color: #fff;
-} */
-
-
-.status-tag {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.status-tag.waiting-dispatch {
-    background-color: #ffc107;
-    /* Yellow */
-    color: #000;
-}
-
-.status-tag.rescue-dispatched {
-    background-color: #007bff;
-    /* Blue */
-    color: #fff;
-}
-
-.status-tag.completed {
-    background-color: #28a745;
-    /* Green */
-    color: #fff;
-}
-
-
-.report-card p {
-    margin-bottom: 10px;
-}
-
-.report-card h3 {
-    margin-bottom: 0;
-    font-size: 18px;
-    color: #333;
-}

@@ -41,7 +41,7 @@
     text-align: center;
 }
 
-button {
+button .createAnnouncementButton {
     display: block;
     width: 100%;
     padding: 10px;
@@ -53,6 +53,6 @@ button {
     font-weight: bold;
 }
 
-button:hover {
+button:hover .createAnnouncementButton {
     background-color: #0056b3;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import '../styles/EditTask.css';
+import '../styles/EditTask.module.css';
 
 const EditTask = () => {
     const { id } = useParams();

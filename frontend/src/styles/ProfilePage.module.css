@@ -45,7 +45,7 @@ h2 {
     font-size: 16px;
 }
 
-button {
+button .button-group{
     padding: 10px 20px;
     background-color: #ffc400;
     color: #fff;
@@ -57,7 +57,7 @@ button {
     margin-top: 15px; /* Ensure spacing between buttons and input fields */
 }
 
-button:hover {
+button:hover .button-group{
     background-color: #b30000;
 }
 
@@ -69,10 +69,10 @@ button[type="button"]:hover {
     background-color: #5a6268;
 }
 
-.edit-button {
+button .edit-button {
     background-color: #2b85d4;
 }
 
-.edit-button:hover {
+button .edit-button:hover {
     background-color: #2b85d4;
 }

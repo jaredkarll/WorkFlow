@@ -105,7 +105,7 @@ function Signup() {
                                 </p>
                             </div>
 
-                            <button type="button" onClick={handleSubmit}>Create Account</button>
+                            <button className="createAccountButton" type="button" onClick={handleSubmit}>Create Account</button>
                         </form>
                     </div>
                 </div>

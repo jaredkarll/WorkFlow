@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../AuthContext'; //
 import { useHistory } from 'react-router-dom';
-import '../styles/CreateAnnouncement.css';
+import '../styles/CreateAnnouncement.module.css';
 
 const CreateAnnouncement = () => {
     const { user } = useContext(AuthContext);
@@ -60,7 +60,7 @@ const CreateAnnouncement = () => {
 
                 {error && <div className="error">{error}</div>}
 
-                <button type="submit">Create Announcement</button>
+                <button className="createAnnouncementButton" type="submit">Create Announcement</button>
             </form>
         </div>
     );

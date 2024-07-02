@@ -37,6 +37,7 @@
 .navbar .rightSide button {
   background-color: transparent;
   border: none;
+  font-weight: 600;
   color: rgb(22, 22, 22);
   cursor: pointer;
 }

@@ -15,7 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3306,
+    port: 3600,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -716,16 +716,21 @@ app.delete('/deleteuser/:id', (req, res) => {
     const { id } = req.params;
     const { userId } = req.body; // Admin's user ID
 
+    console.log('User ID to delete:', id); // Log user ID to delete
+    console.log('Admin ID:', userId); // Log admin ID
+
     // Verify if the user is an admin
     const checkAdminQuery = 'SELECT isAdmin FROM users WHERE id = ?';
     connectDB.query(checkAdminQuery, [userId], (err, results) => {
         if (err) {
+            console.error('Error verifying admin status:', err); // Add detailed logging
             return res.status(500).json({ message: 'Database query failed' });
         }
         if (results.length > 0 && results[0].isAdmin) {
             const query = 'DELETE FROM users WHERE id = ?';
             connectDB.query(query, [id], (error) => {
                 if (error) {
+                    console.error('Error deleting user:', error); // Add detailed logging
                     return res.status(500).json({ message: 'Database query failed' });
                 }
                 res.status(200).json({ message: 'User deleted successfully' });

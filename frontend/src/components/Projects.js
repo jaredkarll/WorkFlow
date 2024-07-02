@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import '../styles/Projects.css';
+import '../styles/Projects.modules.css';
 import CreateProject from '../pages/CreateProject';
 
 const Projects = () => {

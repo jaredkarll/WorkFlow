@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import '../styles/EditProject.css';
+import '../styles/EditProject.module.css';
 
 const EditProject = () => {
     const { id } = useParams();

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SignUpBannerImage from "../assets/aid.jpg";
-import "../styles/ForgotPassword.css";
+import "../styles/ForgotPassword.module.css";
 import axios from 'axios';
 
 function ForgotPassword() {
@@ -96,7 +96,7 @@ function ForgotPassword() {
                                 </p>
                             </div>
 
-                            <button type="button" onClick={handleSubmit}>Submit</button>
+                            <button type="button" className='submitButton' onClick={handleSubmit}>Submit</button>
                         </form>
                     </div>
                 </div>

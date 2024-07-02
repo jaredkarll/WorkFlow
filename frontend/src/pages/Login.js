@@ -90,7 +90,7 @@ function Login() {
 
                             {error && <div className={styles.error}>{error}</div>}
 
-                            <button type="button" onClick={handleSubmit}>Log In</button>
+                            <button className="submitLoginButton" type="button" onClick={handleSubmit}>Log In</button>
                         </form>
                     </div>
                 </div>
