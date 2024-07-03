@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import AuthContext from '../AuthContext'; //
+import AuthContext from '../AuthContext';
 import LoginBannerImage from "../assets/teamwork-login.png";
-import styles from "../styles/Login.module.css"; // Ensure this path is correct and points to the correct CSS file
+import styles from "../styles/Login.module.css";
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
 function Login() {
-    const { isLoggedIn, setIsLoggedIn, setUser } = useContext(AuthContext);
+    const { isLoggedIn, login } = useContext(AuthContext);
     const history = useHistory();
     const [formData, setFormData] = useState({
         email: '',
@@ -29,8 +29,8 @@ function Login() {
         axios.post('http://localhost:8800/loginsubmit', formData)
             .then(response => {
                 const { user } = response.data;
-                setIsLoggedIn(true);
-                setUser(user);
+                user.isAdmin = Boolean(user.isAdmin); // Ensure isAdmin is a boolean
+                login(user);
                 if (user.isAdmin) {
                     history.push('/admindashboard');
                 } else {

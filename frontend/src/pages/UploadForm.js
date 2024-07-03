@@ -54,6 +54,7 @@ const UploadForm = ({ onSuccess }) => {
                 .then(response => {
                     alert('File uploaded successfully');
                     onSuccess();
+                    clearForm();
                 })
                 .catch(error => {
                     console.error('Error uploading file:', error);
@@ -64,6 +65,7 @@ const UploadForm = ({ onSuccess }) => {
                 .then(response => {
                     alert('Link submitted successfully');
                     onSuccess();
+                    clearForm();
                 })
                 .catch(error => {
                     console.error('Error submitting link:', error);
@@ -72,6 +74,12 @@ const UploadForm = ({ onSuccess }) => {
         } else {
             alert('Please select a file or enter a link');
         }
+    };
+
+    const clearForm = () => {
+        setFile(null);
+        setLink('');
+        setSelectedProjectId('');
     };
 
     return (
@@ -111,7 +119,7 @@ const UploadForm = ({ onSuccess }) => {
                 </Select>
             </FormControl>
             <br /><br />
-            <Button variant="contained" color="primary" type="submit">
+            <Button className="fileUploadButton" variant="contained" color="primary" type="submit">
                 Upload
             </Button>
         </form>

@@ -1,0 +1,112 @@
+.profile-page-container {
+    max-width: 600px;
+    width: 100%;
+    margin: 30px auto;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+    text-align: center;
+}
+
+.ProfilePageTitle {
+    font-size: 40px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-details, .profile-edit-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-details p {
+    margin: 10px 0;
+}
+
+.input-box {
+    margin-bottom: 15px;
+    width: 80%;
+    text-align: left;
+}
+
+.input-box label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.button-group button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #2b85d4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    width: auto;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+.button-group button[type="submit"]:hover {
+    background-color: #08457a;
+}
+
+
+/* Edit Profile Button */
+
+.editProfileButton {
+    padding: 10px 20px;
+    background-color: #2b85d4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    width: auto;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+
+.editProfileButton:hover {
+    background-color: #08457a;
+}
+
+
+/* Cancel Profile Changes Button */
+
+.cancelProfileButton {
+    padding: 10px 20px;
+    border: 2px solid red;
+    border-color: #ee4b4b;
+    color: #ee4b4b;
+    background-color: #00000000;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    width: auto;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+
+.cancelProfileButton:hover {
+    color: #ffffff;
+    background-color: #ee4b4b;
+}
+
+
+
+

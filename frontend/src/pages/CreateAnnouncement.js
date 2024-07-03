@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import AuthContext from '../AuthContext'; //
 import { useHistory } from 'react-router-dom';
-import '../styles/CreateAnnouncement.module.css';
+import axios from 'axios';
+import styles from '../styles/CreateAnnouncement.module.css'; // Import CSS module
+import AuthContext from '../AuthContext';
 
 const CreateAnnouncement = () => {
     const { user } = useContext(AuthContext);
@@ -33,11 +33,12 @@ const CreateAnnouncement = () => {
     };
 
     return (
-        <div className="create-announcement-container">
-            <form onSubmit={handleSubmit}>
+        <div className={styles['create-announcement-container']}>
+            <button className={styles['return-button']} onClick={() => history.push('/userdashboard/announcements')}>Return</button>
+            <form onSubmit={handleSubmit} className={styles['create-announcement-form']}>
                 <h2>Create Announcement</h2>
 
-                <div className="input-box">
+                <div className={styles['input-box']}>
                     <label>Title</label>
                     <input
                         type="text"
@@ -48,7 +49,7 @@ const CreateAnnouncement = () => {
                     />
                 </div>
 
-                <div className="input-box">
+                <div className={styles['input-box']}>
                     <label>Content</label>
                     <textarea
                         name="content"
@@ -58,9 +59,9 @@ const CreateAnnouncement = () => {
                     />
                 </div>
 
-                {error && <div className="error">{error}</div>}
+                {error && <div className={styles['error']}>{error}</div>}
 
-                <button className="createAnnouncementButton" type="submit">Create Announcement</button>
+                <button className={styles['createAnnouncementButton']} type="submit">Create Announcement</button>
             </form>
         </div>
     );

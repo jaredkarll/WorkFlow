@@ -57,13 +57,16 @@ const Resources = () => {
     };
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:8800/resources/${id}`)
-            .then(() => {
-                fetchResources();
-            })
-            .catch(error => {
-                console.error('Error deleting resource:', error);
-            });
+        const confirmDelete = window.confirm("Are you sure you want to delete this resource? This action cannot be undone.");
+        if (confirmDelete) {
+            axios.delete(`http://localhost:8800/resources/${id}`)
+                .then(() => {
+                    fetchResources();
+                })
+                .catch(error => {
+                    console.error('Error deleting resource:', error);
+                });
+        }
     };
 
     const handleUploadSuccess = () => {
@@ -108,8 +111,8 @@ const Resources = () => {
                                 <td>{resource.project_name}</td>
                                 <td>{resource.project_members}</td>
                                 <td>
-                                    <button onClick={() => handleEdit(resource)}>Edit</button>
-                                    <button onClick={() => handleDelete(resource.id)}>Delete</button>
+                                    <button className="editResourceButton" onClick={() => handleEdit(resource)}>Edit</button>
+                                    <button className="deleteResourceButton" onClick={() => handleDelete(resource.id)}>Delete</button>
                                 </td>
                             </tr>
                         ))}

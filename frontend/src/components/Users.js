@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import AuthContext from '../AuthContext'; // Import AuthContext
-import CreateUserForm from '../pages/CreateUser'; // Updated import path
+import AuthContext from '../AuthContext';
+import CreateUserForm from '../pages/CreateUser';
 import EditUserForm from './EditUserForm';
-import SideMenu from './SideMenu'; // Import SideMenu component
-import styles from '../styles/Users.module.css';
+import SideMenu from './SideMenu';
+import styles from '../styles/Users.css';
 
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [showCreateUserForm, setShowCreateUserForm] = useState(false);
     const [showEditUserForm, setShowEditUserForm] = useState(false);
     const [editUserData, setEditUserData] = useState(null);
-    const { user } = useContext(AuthContext); // Use AuthContext
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -53,8 +53,8 @@ const Users = () => {
                 <h2 className="page-title">Users</h2>
                 {user && user.isAdmin && (
                     <div>
-                        <button className="create-user-btn" onClick={toggleCreateUserForm}>Create New User</button>
-                        {showCreateUserForm && <CreateUserForm />}
+                        <button className="createNewUserButton" onClick={toggleCreateUserForm}>Create New User</button>
+                        {showCreateUserForm && <CreateUserForm closeForm={toggleCreateUserForm} />}
                     </div>
                 )}
                 {showEditUserForm && <EditUserForm userData={editUserData} />}

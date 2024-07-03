@@ -55,7 +55,7 @@
     background-color: #c82333;
 }
 
-button[type="button"] {
+.addMemberButton {
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -68,11 +68,11 @@ button[type="button"] {
     margin-top: 10px;
 }
 
-button[type="button"]:hover {
+.updateProjectButton button:hover {
     background-color: #0056b3;
 }
 
-button[type="submit"] {
+.updateProjectButton {
     padding: 10px 20px;
     background-color: #28a745;
     color: #fff;
@@ -83,8 +83,4 @@ button[type="submit"] {
     text-align: center;
     text-decoration: none;
     margin-top: 10px;
-}
-
-button[type="submit"]:hover {
-    background-color: #218838;
 }

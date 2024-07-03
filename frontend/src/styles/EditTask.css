@@ -90,7 +90,7 @@
     background-color: #cc0000;
 }
 
-button[type="submit"] {
+.updateTaskButton {
     margin-top: 20px;
     padding: 10px 20px;
     background-color: #007bff;
@@ -103,7 +103,7 @@ button[type="submit"] {
     text-decoration: none;
 }
 
-button[type="submit"]:hover {
+.button[type="submit"]:hover {
     background-color: #0056b3;
 }
 

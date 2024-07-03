@@ -124,13 +124,13 @@
 }
 
 
-button[type="button"]:hover {
-    background-color: #0056b3;
+.button:hover {
+    background-color: #007bff;
 }
 
-button[type="submit"] {
+.actions-column-buttons button {
     padding: 10px 20px;
-    background-color: #28a745;
+    background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -138,9 +138,9 @@ button[type="submit"] {
     font-weight: 600;
     text-align: center;
     text-decoration: none;
-    margin-top: 10px;
+    margin-right: 5px;
 }
 
-button[type="submit"]:hover {
-    background-color: #218838;
+.actions-column-buttons button:hover {
+    background-color: #213c88;
 }

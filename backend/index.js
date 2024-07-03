@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        cb(null, file.originalname);
     }
 });
 
@@ -324,10 +324,10 @@ app.get('/tasks', (req, res) => {
 // Add this endpoint to update a task by ID
 app.put('/tasks/:id', (req, res) => {
     const { id } = req.params;
-    const { title, assigned_to, due_date, subtasks } = req.body;
+    const { title, assigned_to, project_id, due_date, subtasks } = req.body;
 
-    const updateTaskQuery = 'UPDATE tasks SET title = ?, assigned_to = ?, due_date = ? WHERE id = ?';
-    connectDB.query(updateTaskQuery, [title, assigned_to, due_date, id], (err, result) => {
+    const updateTaskQuery = 'UPDATE tasks SET title = ?, assigned_to = ?, project_id = ?, due_date = ? WHERE id = ?';
+    connectDB.query(updateTaskQuery, [title, assigned_to, project_id, due_date, id], (err, result) => {
         if (err) {
             console.error('Error updating task:', err);
             return res.status(500).json({ message: 'Error updating task' });
@@ -354,6 +354,7 @@ app.put('/tasks/:id', (req, res) => {
         });
     });
 });
+
 
 // Add this endpoint to fetch a task by ID
 app.get('/tasks/:id', (req, res) => {
@@ -408,15 +409,15 @@ app.put('/subtasks/:id', (req, res) => {
 
 // Endpoint to create a task with subtasks
 app.post('/tasks', (req, res) => {
-    const { title, assigned_to, subtasks } = req.body;
+    const { title, assigned_to, project_id, subtasks } = req.body;
 
     connectDB.getConnection((err, connection) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection failed' });
         }
 
-        const taskQuery = 'INSERT INTO tasks (title, assigned_to, due_date) VALUES (?, ?, NOW())';
-        connection.query(taskQuery, [title, assigned_to], (taskError, taskResults) => {
+        const taskQuery = 'INSERT INTO tasks (title, assigned_to, project_id, due_date) VALUES (?, ?, ?, NOW())';
+        connection.query(taskQuery, [title, assigned_to, project_id], (taskError, taskResults) => {
             if (taskError) {
                 connection.release();
                 return res.status(500).json({ message: 'Task creation failed' });
@@ -448,6 +449,7 @@ app.post('/tasks', (req, res) => {
         });
     });
 });
+
 
 // Endpoint to delete a task
 app.delete('/tasks/:id', (req, res) => {
@@ -755,6 +757,47 @@ app.put('/updateprofile/:id', (req, res) => {
         res.status(200).json({ message: 'Profile updated successfully' });
     });
 });
+
+
+app.get('/analytics/tasks', (req, res) => {
+    const { projectId } = req.query;
+    const query = `
+        SELECT t.id as task_id, t.title, COUNT(s.id) as total_subtasks, SUM(s.completed) as completed_subtasks
+        FROM tasks t
+        LEFT JOIN subtasks s ON t.id = s.task_id
+        WHERE t.project_id = ?
+        GROUP BY t.id;
+    `;
+    connectDB.query(query, [projectId], (error, results) => {
+        if (error) {
+            console.error('Error fetching tasks:', error);
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        const tasks = results.map(task => ({
+            ...task,
+            completed: task.total_subtasks === task.completed_subtasks,
+        }));
+        res.status(200).json(tasks);
+    });
+});
+
+// Analytics endpoint for file uploads
+app.get('/analytics/files', (req, res) => {
+    const { projectId } = req.query;
+    const query = `
+        SELECT f.id, f.upload_date
+        FROM files f
+        WHERE f.project_id = ?
+    `;
+    connectDB.query(query, [projectId], (error, results) => {
+        if (error) {
+            console.error('Error fetching files:', error);
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        res.status(200).json(results);
+    });
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

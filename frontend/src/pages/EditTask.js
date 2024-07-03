@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import '../styles/EditTask.module.css';
+import '../styles/EditTask.css';
 
 const EditTask = () => {
     const { id } = useParams();
@@ -9,8 +9,10 @@ const EditTask = () => {
     const [taskTitle, setTaskTitle] = useState('');
     const [assignedTo, setAssignedTo] = useState([]);
     const [dueDate, setDueDate] = useState('');
+    const [projectId, setProjectId] = useState('');
     const [subtasks, setSubtasks] = useState([]);
     const [users, setUsers] = useState([]);
+    const [projects, setProjects] = useState([]);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -20,6 +22,7 @@ const EditTask = () => {
                 setTaskTitle(task.title);
                 setAssignedTo(task.assigned_to.split(', '));
                 setDueDate(task.due_date.split('T')[0]); // Adjusting date format
+                setProjectId(task.project_id); // Set project ID
                 setSubtasks(task.subtasks);
             })
             .catch(error => {
@@ -32,6 +35,14 @@ const EditTask = () => {
             })
             .catch(error => {
                 console.error('Error fetching users:', error);
+            });
+
+        axios.get('http://localhost:8800/projects')
+            .then(response => {
+                setProjects(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching projects:', error);
             });
     }, [id]);
 
@@ -75,6 +86,7 @@ const EditTask = () => {
                 title: taskTitle,
                 assigned_to: assignedTo.join(', '),
                 due_date: dueDate,
+                project_id: projectId,
                 subtasks
             });
 
@@ -138,6 +150,16 @@ const EditTask = () => {
                 </div>
 
                 <div className="form-group">
+                    <label>Project</label>
+                    <select value={projectId} onChange={(e) => setProjectId(e.target.value)} required>
+                        <option value="" disabled>Select project</option>
+                        {projects.map(project => (
+                            <option key={project.id} value={project.id}>{project.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="form-group">
                     <label>Subtasks</label>
                     {subtasks.map((subtask, index) => (
                         <div key={index} className="subtask-group">
@@ -153,7 +175,7 @@ const EditTask = () => {
                     <button type="button" onClick={addSubtask}>Add Subtask</button>
                 </div>
 
-                <button type="submit">Update Task</button>
+                <button className="updateTaskButton" type="submit">Update Task</button>
                 <button type="button" onClick={() => history.push('/userdashboard/tasks')} className="return-button">Return to Tasks</button>
             </form>
         </div>

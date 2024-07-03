@@ -15,10 +15,9 @@ const SideMenu = () => {
                     <li><NavLink to="/userdashboard/tasks" activeClassName="active">Tasks</NavLink></li>
                     <li><NavLink to="/userdashboard/projects" activeClassName="active">Projects</NavLink></li>
                     <li><NavLink to="/userdashboard/resources" activeClassName="active">Resources</NavLink></li>
-                    {user && user.isAdmin && (
+                    {user && Boolean(user.isAdmin) && ( // Ensure isAdmin is interpreted as a boolean
                         <>
                             <li><NavLink to="/admindashboard/users" activeClassName="active">Users</NavLink></li>
-                            <li><NavLink to="/create-user" activeClassName="active">Create User</NavLink></li>
                         </>
                     )}
                 </ul>

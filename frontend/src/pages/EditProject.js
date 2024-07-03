@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import '../styles/EditProject.module.css';
+import '../styles/EditProject.css';
 
 const EditProject = () => {
     const { id } = useParams();
@@ -138,11 +138,11 @@ const EditProject = () => {
                             <button type="button" onClick={() => deleteMember(index)}>Delete</button>
                         </div>
                     ))}
-                    <button type="button" onClick={addMember}>Add Member</button>
+                    <button className="addMemberButton" type="button" onClick={addMember}>Add Member</button>
                 </div>
 
-                <button type="submit">Update Project</button>
-                <button type="button" onClick={() => history.push('/userdashboard')} className="return-button">Return to Projects</button>
+                <button className="updateProjectButton" type="submit">Update Project</button>
+                <button className="return-button" type="button" onClick={() => history.push('/userdashboard/projects')} >Return to Projects</button>
             </form>
         </div>
     );

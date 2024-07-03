@@ -1,17 +1,15 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 import styles from '../styles/CreateUser.module.css';
 
-const CreateUser = () => {
+const CreateUser = ({ closeForm }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isAdmin, setIsAdmin] = useState(false);
     const { user } = useContext(AuthContext);
-    const history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,7 +28,7 @@ const CreateUser = () => {
             setEmail('');
             setPassword('');
             setIsAdmin(false);
-            history.push('/admindashboard/users'); // Redirect to users page after creation
+            closeForm(); // Close the form after user creation
         } catch (error) {
             console.error('Error creating user:', error);
             alert('Failed to create user');
@@ -39,7 +37,6 @@ const CreateUser = () => {
 
     return (
         <div className={styles['create-user-page']}>
-            <button className={styles['return-button']} onClick={() => history.push('/admindashboard/users')}>Return</button>
             <div className={styles['profile-page-container']}>
                 <h2 className={styles['createUserHeader']}>Create User</h2>
                 <form onSubmit={handleSubmit} className={styles['profile-edit-form']}>
@@ -63,7 +60,10 @@ const CreateUser = () => {
                         <label>Admin</label>
                         <input type="checkbox" checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />
                     </div>
-                    <button className={styles['createUserSubmitButton']} type="submit">Create User</button>
+                    <div className={styles['button-container']}>
+                        <button className={styles['createUserSubmitButton']} type="submit">Create User</button>
+                        <button className={styles['cancelButton']} type="button" onClick={closeForm}>Cancel</button>
+                    </div>
                 </form>
             </div>
         </div>

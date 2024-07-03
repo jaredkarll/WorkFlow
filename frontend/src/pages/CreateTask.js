@@ -98,10 +98,10 @@ const CreateTask = () => {
                                     onChange={(e) => handleSubTaskChange(index, e.target.value)}
                                     required
                                 />
-                                <button type="button" onClick={() => deleteSubTask(index)}>Delete</button>
+                                <button className="deleteSubTaskButton" type="button" onClick={() => deleteSubTask(index)}>Delete</button>
                             </div>
                         ))}
-                        <button type="button" onClick={addSubTask}>Add Sub Task</button>
+                        <button className="addSubTaskButton" type="button" onClick={addSubTask}>Add Sub Task</button>
                     </div>
 
                     <div className="form-group">
@@ -124,7 +124,7 @@ const CreateTask = () => {
                         </select>
                     </div>
 
-                    <button type="submit">Create Task</button>
+                    <button className="createTaskButton" type="submit">Create Task</button>
                 </form>
             </div>
         </div>

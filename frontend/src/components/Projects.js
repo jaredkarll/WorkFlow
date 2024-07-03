@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import '../styles/Projects.modules.css';
+import '../styles/Projects.css';
 import CreateProject from '../pages/CreateProject';
 
 const Projects = () => {
@@ -78,7 +78,7 @@ const Projects = () => {
                             </div>
                             <span>{project.progress}%</span>
                         </div>
-                        <div className="actions-column">
+                        <div className="actions-column-buttons">
                             <button onClick={() => handleViewProject(project.id)}>View Project</button>
                             <button onClick={() => handleEditProject(project.id)}>Edit</button>
                             <button onClick={() => handleDeleteProject(project.id)}>Delete</button>

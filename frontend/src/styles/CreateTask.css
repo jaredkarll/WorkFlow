@@ -75,7 +75,7 @@
     background-color: #c82333;
 }
 
-button[type="button"] {
+.addSubTaskButton {
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -88,11 +88,11 @@ button[type="button"] {
     margin-top: 10px;
 }
 
-button[type="button"]:hover {
+.addSubTaskButton button:hover {
     background-color: #0056b3;
 }
 
-button[type="submit"] {
+.createTaskButton {
     padding: 10px 20px;
     background-color: #28a745;
     color: #fff;
@@ -105,6 +105,6 @@ button[type="submit"] {
     margin-top: 10px;
 }
 
-button[type="submit"]:hover {
+.createTaskButton button:hover {
     background-color: #218838;
 }

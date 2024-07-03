@@ -122,8 +122,8 @@ const CreateProject = ({ onClose }) => {
                     <button type="button" onClick={addMember}>Add Member</button>
                 </div>
 
-                <button type="submit">Create Project</button>
-                <button type="button" onClick={() => onClose(null)} className="return-button">Return to Projects</button>
+                <button className="createProjectButton" type="submit">Create Project</button>
+                <button className="return-button" type="button" onClick={() => onClose(null)} >Return to Projects</button>
             </form>
         </div>
     );

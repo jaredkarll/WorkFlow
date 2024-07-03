@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar";
@@ -19,15 +19,12 @@ import CreateAnnouncement from "./pages/CreateAnnouncement";
 import CreateUser from "./pages/CreateUser"; // Import CreateUser
 import EditUserForm from "./components/EditUserForm";
 import Users from "./components/Users";
-import AuthContext from './AuthContext';
+import { AuthProvider } from './AuthContext';
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState(null);
-
     return (
         <div className="App">
-            <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser }}>
+            <AuthProvider>
                 <Router>
                     <Navbar />
                     <Switch>
@@ -50,7 +47,7 @@ function App() {
                     </Switch>
                     <Footer />
                 </Router>
-            </AuthContext.Provider>
+            </AuthProvider>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import '../styles/ProfilePage.module.css';
+import '../styles/ProfilePage.css';
 import AuthContext from '../AuthContext'; // Import AuthContext
 
 const ProfilePage = () => {
@@ -42,13 +42,13 @@ const ProfilePage = () => {
 
     return (
         <div className="profile-page-container">
-            <h2>User Profile</h2>
+            <h2 className="ProfilePageTitle">User Profile</h2>
             {!editMode ? (
                 <div className="profile-details">
                     <p><strong>First Name:</strong> {user.first_name}</p>
                     <p><strong>Last Name:</strong> {user.last_name}</p>
                     <p><strong>Email:</strong> {user.email}</p>
-                    <button onClick={() => setEditMode(true)} className="edit-button">Edit Profile</button>
+                    <button className="editProfileButton" onClick={() => setEditMode(true)}>Edit Profile</button>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className="profile-edit-form">
@@ -83,8 +83,8 @@ const ProfilePage = () => {
                         />
                     </div>
                     <div className="button-group">
-                        <button type="submit">Save Changes</button>
-                        <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+                        <button className='saveProfileChangesButton' type="submit">Save Changes</button>
+                        <button className='cancelProfileButton' type="button" onClick={() => setEditMode(false)}>Cancel</button>
                     </div>
                 </form>
             )}
