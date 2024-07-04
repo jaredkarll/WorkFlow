@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3600
--- Generation Time: Jul 02, 2024 at 05:00 PM
+-- Generation Time: Jul 04, 2024 at 03:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -66,13 +66,7 @@ CREATE TABLE `files` (
 --
 
 INSERT INTO `files` (`id`, `project_id`, `filename`, `filepath`, `upload_date`, `type`, `link`) VALUES
-(1, 2, 'Confim', '/uploads/Confim', '2024-06-23 07:57:44', 'file', NULL),
-(2, 8, 'hatdog69-message.txt', '/uploads/hatdog69-message.txt', '2024-06-24 13:18:21', 'file', NULL),
-(4, 8, '1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '/uploads/1719236918350-Gmail - We Miss You! Reconfirm Your Subscription to Stay Inspired.pdf', '2024-06-24 13:48:38', 'file', NULL),
-(12, 2, '1719316324906-DNG YT Banner Final.jpg', '/uploads/1719316324906-DNG YT Banner Final.jpg', '2024-06-25 11:52:04', 'file', NULL),
-(13, 2, NULL, NULL, '2024-06-25 11:52:20', 'link', 'https://chatgpt.com/c/77ab82bb-4e15-4de2-bbbb-437ece5759ea'),
-(14, 8, '1719318014381-message (1).txt', '/uploads/1719318014381-message (1).txt', '2024-06-25 12:20:14', 'file', NULL),
-(16, 2, '1719318188908-copperhead.jpg', '/uploads/1719318188908-copperhead.jpg', '2024-06-25 12:23:08', 'file', NULL);
+(24, 2, 'TQP SEO June Report.pdf', '/uploads/TQP SEO June Report.pdf', '2024-07-03 14:23:06', 'file', NULL);
 
 -- --------------------------------------------------------
 
@@ -94,8 +88,6 @@ CREATE TABLE `projects` (
 
 INSERT INTO `projects` (`id`, `name`, `progress`, `goals`, `methodology`) VALUES
 (2, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, 'Matapos na to and makapag japan', 'Di ko alam'),
-(3, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 100, 'hehe', 'hehe'),
-(4, 'WorkFlow: Task Checklist Website Application for Software and Application Development', 75, 'SARAP', 'IDK'),
 (8, 'Unilink Project', 100, 'Dasd', 'adsa');
 
 -- --------------------------------------------------------
@@ -115,13 +107,11 @@ CREATE TABLE `project_members` (
 --
 
 INSERT INTO `project_members` (`id`, `project_id`, `user_id`) VALUES
-(44, 2, 11),
-(45, 2, 3),
-(46, 2, 18),
 (63, 8, 8),
 (64, 8, 4),
-(67, 4, 11),
-(68, 3, 7);
+(69, 2, 11),
+(70, 2, 3),
+(71, 2, 18);
 
 -- --------------------------------------------------------
 
@@ -141,11 +131,12 @@ CREATE TABLE `subtasks` (
 --
 
 INSERT INTO `subtasks` (`id`, `task_id`, `title`, `completed`) VALUES
-(43, 1, 'Wireframe', 1),
-(44, 1, 'Prototyping', 1),
-(45, 1, 'Color Scheme', 1),
-(46, 1, 'Testing', 1),
-(55, 3, 'Create Documentation', 0);
+(61, 3, 'Create Documentation', 1),
+(62, 3, 'Add Table of Contents', 1),
+(63, 1, 'Wireframe', 1),
+(64, 1, 'Prototyping', 1),
+(65, 1, 'Color Scheme', 1),
+(66, 1, 'Testing', 1);
 
 -- --------------------------------------------------------
 
@@ -167,8 +158,8 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `title`, `assigned_to`, `project_id`, `due_date`, `created_at`) VALUES
-(1, 'UI/UX Design', 'Taylor Swift', 0, '2024-04-26', '2024-06-22 05:06:13'),
-(3, 'Project Documentation', 'John Doe', 0, '2024-06-23', '2024-06-25 14:29:32');
+(1, 'UI/UX Design', 'Taylor Swift', 8, '2024-04-24', '2024-06-22 05:06:13'),
+(3, 'Project Documentation', 'Taylor Swift', 2, '2024-06-21', '2024-06-25 14:29:32');
 
 -- --------------------------------------------------------
 
@@ -267,7 +258,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -279,13 +270,13 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `project_members`
 --
 ALTER TABLE `project_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `subtasks`
 --
 ALTER TABLE `subtasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `tasks`
