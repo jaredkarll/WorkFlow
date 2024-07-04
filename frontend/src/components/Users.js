@@ -4,7 +4,7 @@ import AuthContext from '../AuthContext';
 import CreateUserForm from '../pages/CreateUser';
 import EditUserForm from './EditUserForm';
 import SideMenu from './SideMenu';
-import styles from '../styles/Users.css';
+import '../styles/Users.css'; // Ensure proper import of CSS
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -58,7 +58,7 @@ const Users = () => {
                     </div>
                 )}
                 {showEditUserForm && <EditUserForm userData={editUserData} />}
-                <table className={styles['user-table']}>
+                <table className="user-table">
                     <thead>
                         <tr>
                             <th>First Name</th>

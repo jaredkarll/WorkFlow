@@ -15,7 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3600,
+    port: 3307,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -272,6 +272,35 @@ app.post('/announcements', (req, res) => {
     });
 });
 
+// Endpoint to update an announcement
+app.put('/announcements/:id', (req, res) => {
+    const { id } = req.params;
+    const { title, content } = req.body;
+
+    const query = 'UPDATE announcements SET title = ?, content = ? WHERE id = ?';
+    connectDB.query(query, [title, content, id], (error, results) => {
+        if (error) {
+            console.error('Error updating announcement:', error);
+            return res.status(500).json({ message: 'Error updating announcement' });
+        }
+        res.status(200).json({ message: 'Announcement updated successfully' });
+    });
+});
+
+// Endpoint to delete an announcement
+app.delete('/announcements/:id', (req, res) => {
+    const { id } = req.params;
+
+    const query = 'DELETE FROM announcements WHERE id = ?';
+    connectDB.query(query, [id], (error, results) => {
+        if (error) {
+            console.error('Error deleting announcement:', error);
+            return res.status(500).json({ message: 'Error deleting announcement' });
+        }
+        res.status(200).json({ message: 'Announcement deleted successfully' });
+    });
+});
+
 // Endpoint to handle forgotten password
 app.put('/forgotpassword', (req, res) => {
     const { email, password } = req.body;
@@ -354,7 +383,6 @@ app.put('/tasks/:id', (req, res) => {
         });
     });
 });
-
 
 // Add this endpoint to fetch a task by ID
 app.get('/tasks/:id', (req, res) => {
@@ -449,7 +477,6 @@ app.post('/tasks', (req, res) => {
         });
     });
 });
-
 
 // Endpoint to delete a task
 app.delete('/tasks/:id', (req, res) => {
@@ -758,7 +785,7 @@ app.put('/updateprofile/:id', (req, res) => {
     });
 });
 
-
+// Analytics endpoint for tasks
 app.get('/analytics/tasks', (req, res) => {
     const { projectId } = req.query;
     const query = `
@@ -798,6 +825,17 @@ app.get('/analytics/files', (req, res) => {
     });
 });
 
+// Serve files for download
+app.get('/download/:filename', (req, res) => {
+    const { filename } = req.params;
+    const file = path.join(__dirname, 'uploads', filename);
+    res.download(file, (err) => {
+        if (err) {
+            console.error('Error downloading file:', err);
+            res.status(500).json({ message: 'Error downloading file' });
+        }
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
