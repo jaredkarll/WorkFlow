@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import SignUpBannerImage from "../assets/aid.jpg";
-import "../styles/ForgotPassword.module.css";
+import SignUpBannerImage from "../assets/home-background.jpg";
+import "../styles/ForgotPassword.css";
 import axios from 'axios';
 
 function ForgotPassword() {
@@ -64,7 +64,7 @@ function ForgotPassword() {
         <div className="forgot-password">
             <div className="splitContainer">
                 <div className="leftPanel" style={{ backgroundImage: `url(${SignUpBannerImage})` }}>
-                    <h1>Rescue Starts Here</h1>
+                    <h1>We're glad to have you back.</h1>
                     <div className="overlay"></div>
                 </div>
 
@@ -96,7 +96,7 @@ function ForgotPassword() {
                                 </p>
                             </div>
 
-                            <button type="button" className='submitButton' onClick={handleSubmit}>Submit</button>
+                            <button type="button" className="submitButton" onClick={handleSubmit}>Submit</button>
                         </form>
                     </div>
                 </div>

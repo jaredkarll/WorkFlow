@@ -73,6 +73,7 @@ const Tasks = () => {
                             <div className="task-header-info">
                                 <h3>{task.title}</h3>
                                 <p>Assigned to: {task.assigned_to}</p>
+                                <p>Project: {task.project_name}</p>
                                 <p>{new Date(task.due_date).toLocaleDateString()}</p>
                             </div>
                             <img

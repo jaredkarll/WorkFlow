@@ -49,7 +49,7 @@ function Login() {
                 <div className={styles.leftPanel}>
                     <div className={styles.overlay}></div>
                     <img src={LoginBannerImage} alt="Login Banner" />
-                    <h1>Rescue Starts Here</h1>
+                    <h1>Greatness Awaits</h1>
                 </div>
 
                 <div className={styles.rightPanel}>
@@ -90,8 +90,9 @@ function Login() {
 
                             {error && <div className={styles.error}>{error}</div>}
 
-                            <button className="submitLoginButton" type="button" onClick={handleSubmit}>Log In</button>
+                            <button className={styles.loginButton} type="button" onClick={handleSubmit}>Log In</button>
                         </form>
+                        
                     </div>
                 </div>
             </div>

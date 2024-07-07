@@ -15,7 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const connectDB = mysql.createPool({
     host: 'localhost',
-    port: 3307,
+    port: 3600,
     user: 'root',
     password: '',
     database: 'workflow'
@@ -321,9 +321,11 @@ app.put('/forgotpassword', (req, res) => {
 app.get('/tasks', (req, res) => {
     const query = `
         SELECT t.id as task_id, t.title, t.assigned_to, t.due_date,
-               s.id as subtask_id, s.title as subtask_title, s.completed
+               s.id as subtask_id, s.title as subtask_title, s.completed,
+               p.name as project_name
         FROM tasks t
         LEFT JOIN subtasks s ON t.id = s.task_id
+        LEFT JOIN projects p ON t.project_id = p.id
     `;
     connectDB.query(query, (error, results) => {
         if (error) {
@@ -339,6 +341,7 @@ app.get('/tasks', (req, res) => {
                     title: row.title,
                     assigned_to: row.assigned_to,
                     due_date: row.due_date,
+                    project_name: row.project_name,
                     subtasks: row.subtask_id ? [{ id: row.subtask_id, title: row.subtask_title, completed: row.completed }] : []
                 });
             } else {
@@ -349,6 +352,7 @@ app.get('/tasks', (req, res) => {
         res.status(200).json(tasks);
     });
 });
+
 
 // Add this endpoint to update a task by ID
 app.put('/tasks/:id', (req, res) => {
@@ -439,8 +443,11 @@ app.put('/subtasks/:id', (req, res) => {
 app.post('/tasks', (req, res) => {
     const { title, assigned_to, project_id, subtasks } = req.body;
 
+    console.log('Received payload:', req.body); // Add logging to verify the received payload
+
     connectDB.getConnection((err, connection) => {
         if (err) {
+            console.error('Database connection failed:', err);
             return res.status(500).json({ message: 'Database connection failed' });
         }
 
@@ -448,14 +455,15 @@ app.post('/tasks', (req, res) => {
         connection.query(taskQuery, [title, assigned_to, project_id], (taskError, taskResults) => {
             if (taskError) {
                 connection.release();
+                console.error('Task creation failed:', taskError);
                 return res.status(500).json({ message: 'Task creation failed' });
             }
 
             const taskId = taskResults.insertId;
             const subtaskQueries = subtasks.map(subtask => {
                 return new Promise((resolve, reject) => {
-                    const subtaskQuery = 'INSERT INTO subtasks (task_id, title) VALUES (?, ?)';
-                    connection.query(subtaskQuery, [taskId, subtask], (subtaskError) => {
+                    const subtaskQuery = 'INSERT INTO subtasks (task_id, title, completed) VALUES (?, ?, 0)';
+                    connection.query(subtaskQuery, [taskId, subtask.title], (subtaskError) => {
                         if (subtaskError) {
                             reject(subtaskError);
                         } else {
@@ -472,11 +480,13 @@ app.post('/tasks', (req, res) => {
                 })
                 .catch(subtaskError => {
                     connection.release();
+                    console.error('Subtask creation failed:', subtaskError);
                     res.status(500).json({ message: 'Subtask creation failed' });
                 });
         });
     });
 });
+
 
 // Endpoint to delete a task
 app.delete('/tasks/:id', (req, res) => {
@@ -785,9 +795,14 @@ app.put('/updateprofile/:id', (req, res) => {
     });
 });
 
-// Analytics endpoint for tasks
 app.get('/analytics/tasks', (req, res) => {
     const { projectId } = req.query;
+    
+    if (!projectId) {
+        console.error('Project ID is required');
+        return res.status(400).json({ message: 'Project ID is required' });
+    }
+
     const query = `
         SELECT t.id as task_id, t.title, COUNT(s.id) as total_subtasks, SUM(s.completed) as completed_subtasks
         FROM tasks t
@@ -802,28 +817,75 @@ app.get('/analytics/tasks', (req, res) => {
         }
         const tasks = results.map(task => ({
             ...task,
-            completed: task.total_subtasks === task.completed_subtasks,
+            completed: task.total_subtasks == task.completed_subtasks
         }));
         res.status(200).json(tasks);
     });
 });
 
+
+
 // Analytics endpoint for file uploads
 app.get('/analytics/files', (req, res) => {
     const { projectId } = req.query;
+
+    if (!projectId) {
+        console.error('Project ID is required');
+        return res.status(400).json({ message: 'Project ID is required' });
+    }
+
     const query = `
-        SELECT f.id, f.upload_date
-        FROM files f
-        WHERE f.project_id = ?
+        SELECT DATE(upload_date) as date, COUNT(*) as file_count
+        FROM files
+        WHERE project_id = ?
+        GROUP BY DATE(upload_date)
+        ORDER BY DATE(upload_date);
     `;
     connectDB.query(query, [projectId], (error, results) => {
         if (error) {
-            console.error('Error fetching files:', error);
+            console.error('Error fetching file analytics:', error);
             return res.status(500).json({ message: 'Database query failed' });
         }
         res.status(200).json(results);
     });
 });
+
+
+
+app.get('/analytics/subtasks', (req, res) => {
+    const { projectId } = req.query;
+
+    if (!projectId) {
+        console.error('Project ID is required');
+        return res.status(400).json({ message: 'Project ID is required' });
+    }
+
+    const query = `
+        SELECT COUNT(s.id) as total_subtasks, SUM(s.completed) as completed_subtasks
+        FROM tasks t
+        LEFT JOIN subtasks s ON t.id = s.task_id
+        WHERE t.project_id = ?;
+    `;
+    connectDB.query(query, [projectId], (error, results) => {
+        if (error) {
+            console.error('Error fetching subtasks analytics:', error);
+            return res.status(500).json({ message: 'Database query failed' });
+        }
+        if (results.length > 0) {
+            const total_subtasks = results[0].total_subtasks;
+            const completed_subtasks = results[0].completed_subtasks || 0; // Handle case where there are no completed subtasks
+            const pending_subtasks = total_subtasks - completed_subtasks;
+
+            res.status(200).json({ completed: completed_subtasks, pending: pending_subtasks });
+        } else {
+            res.status(200).json({ completed: 0, pending: 0 });
+        }
+    });
+});
+
+
+
+
 
 // Serve files for download
 app.get('/download/:filename', (req, res) => {

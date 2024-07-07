@@ -15,7 +15,7 @@ const CreateTask = () => {
     useEffect(() => {
         axios.get('http://localhost:8800/users')
             .then(response => {
-                setUsers(response.data.filter(user => !user.isAdmin)); // Assuming isAdmin is a boolean field
+                setUsers(response.data.filter(user => !user.isAdmin));
             })
             .catch(error => {
                 console.error('Error fetching users:', error);
@@ -48,13 +48,17 @@ const CreateTask = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const payload = {
+            title: taskName,
+            assigned_to: assignedTo,
+            project_id: projectId,
+            subtasks: subTasks.map(title => ({ title }))
+        };
+
+        console.log('Request Payload:', payload); // Add logging to verify the payload
+
         try {
-            const response = await axios.post('http://localhost:8800/tasks', {
-                title: taskName,
-                assigned_to: assignedTo,
-                project_id: projectId,
-                subtasks: subTasks
-            });
+            const response = await axios.post('http://localhost:8800/tasks', payload);
 
             if (response.status === 201) {
                 alert('Task created successfully');

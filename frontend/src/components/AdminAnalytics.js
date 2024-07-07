@@ -8,7 +8,8 @@ const AdminAnalytics = () => {
     const [projects, setProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState('');
     const [tasksData, setTasksData] = useState({ completed: 0, pending: 0 });
-    const [fileUploadData, setFileUploadData] = useState([]);
+    const [fileData, setFileData] = useState({ labels: [], datasets: [] });
+    const [subtasksData, setSubtasksData] = useState({ completed: 0, pending: 0 });
 
     useEffect(() => {
         axios.get('http://localhost:8800/projects')
@@ -24,11 +25,14 @@ const AdminAnalytics = () => {
     }, []);
 
     useEffect(() => {
+        console.log('Selected Project:', selectedProject);  // Log the selected project
+    
         if (selectedProject) {
             axios.get(`http://localhost:8800/analytics/tasks?projectId=${selectedProject}`)
                 .then(response => {
+                    console.log('Tasks data from API:', response.data);  // Log the API response
                     const tasks = response.data;
-                    const completed = tasks.filter(task => task.completed_subtasks === task.total_subtasks).length;
+                    const completed = tasks.filter(task => task.completed).length;
                     const pending = tasks.length - completed;
                     setTasksData({ completed, pending });
                 })
@@ -38,11 +42,35 @@ const AdminAnalytics = () => {
 
             axios.get(`http://localhost:8800/analytics/files?projectId=${selectedProject}`)
                 .then(response => {
-                    const uploads = response.data;
-                    setFileUploadData(uploads);
+                    console.log('Files data from API:', response.data);  // Log the API response
+                    const files = response.data;
+                    const labels = files.map(file => file.date);
+                    const data = files.map(file => file.file_count);
+
+                    setFileData({
+                        labels,
+                        datasets: [
+                            {
+                                label: 'Files Uploaded',
+                                data,
+                                fill: false,
+                                backgroundColor: 'rgb(75, 192, 192)',
+                                borderColor: 'rgba(75, 192, 192, 0.2)',
+                            }
+                        ],
+                    });
                 })
                 .catch(error => {
-                    console.error('Error fetching file uploads:', error);
+                    console.error('Error fetching file analytics:', error);
+                });
+
+            axios.get(`http://localhost:8800/analytics/subtasks?projectId=${selectedProject}`)
+                .then(response => {
+                    console.log('Subtasks data from API:', response.data);  // Log the API response
+                    setSubtasksData(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching subtasks analytics:', error);
                 });
         }
     }, [selectedProject]);
@@ -51,7 +79,7 @@ const AdminAnalytics = () => {
         setSelectedProject(event.target.value);
     };
 
-    const pieData = {
+    const tasksPieData = {
         labels: ['Completed Tasks', 'Pending Tasks'],
         datasets: [
             {
@@ -61,15 +89,12 @@ const AdminAnalytics = () => {
         ],
     };
 
-    const lineData = {
-        labels: fileUploadData.map(file => new Date(file.upload_date).toLocaleDateString()),
+    const subtasksPieData = {
+        labels: ['Completed Subtasks', 'Pending Subtasks'],
         datasets: [
             {
-                label: 'Files Uploaded',
-                data: fileUploadData.map((_, index) => index + 1),
-                fill: false,
-                backgroundColor: 'rgb(75, 192, 192)',
-                borderColor: 'rgba(75, 192, 192, 0.2)',
+                data: [subtasksData.completed, subtasksData.pending],
+                backgroundColor: ['#36A2EB', '#FFCE56'],
             },
         ],
     };
@@ -91,13 +116,19 @@ const AdminAnalytics = () => {
                 <div className={styles.chart}>
                     <h4>Task Completion Status</h4>
                     <div style={{ width: '400px', height: '400px' }}>
-                        <Pie data={pieData} />
+                        <Pie data={tasksPieData} />
                     </div>
                 </div>
                 <div className={styles.chart}>
-                    <h4>File Upload History</h4>
+                    <h4>File Upload Status</h4>
+                    <div style={{ width: '400px', height: '200px' }}>
+                        <Line data={fileData} />
+                    </div>
+                </div>
+                <div className={styles.chart}>
+                    <h4>Subtasks Completion Status</h4>
                     <div style={{ width: '400px', height: '400px' }}>
-                        <Line data={lineData} />
+                        <Pie data={subtasksPieData} />
                     </div>
                 </div>
             </div>
