@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Pie, Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import styles from '../styles/AdminAnalytics.css';
+import '../styles/AdminAnalytics.css'; // Ensure the path is correct
 
 const AdminAnalytics = () => {
     const [projects, setProjects] = useState([]);
@@ -25,12 +25,9 @@ const AdminAnalytics = () => {
     }, []);
 
     useEffect(() => {
-        console.log('Selected Project:', selectedProject);  // Log the selected project
-    
         if (selectedProject) {
             axios.get(`http://localhost:8800/analytics/tasks?projectId=${selectedProject}`)
                 .then(response => {
-                    console.log('Tasks data from API:', response.data);  // Log the API response
                     const tasks = response.data;
                     const completed = tasks.filter(task => task.completed).length;
                     const pending = tasks.length - completed;
@@ -42,7 +39,6 @@ const AdminAnalytics = () => {
 
             axios.get(`http://localhost:8800/analytics/files?projectId=${selectedProject}`)
                 .then(response => {
-                    console.log('Files data from API:', response.data);  // Log the API response
                     const files = response.data;
                     const labels = files.map(file => file.date);
                     const data = files.map(file => file.file_count);
@@ -66,7 +62,6 @@ const AdminAnalytics = () => {
 
             axios.get(`http://localhost:8800/analytics/subtasks?projectId=${selectedProject}`)
                 .then(response => {
-                    console.log('Subtasks data from API:', response.data);  // Log the API response
                     setSubtasksData(response.data);
                 })
                 .catch(error => {
@@ -100,9 +95,9 @@ const AdminAnalytics = () => {
     };
 
     return (
-        <div className={styles.analyticsContainer}>
+        <div className="analyticsContainerCustom">
             <h3>Project Analytics</h3>
-            <div className={styles.dropdownContainer}>
+            <div className="dropdownContainerCustom">
                 <label htmlFor="projectSelect">Select Project: </label>
                 <select id="projectSelect" value={selectedProject} onChange={handleProjectChange}>
                     {projects.map((project) => (
@@ -112,26 +107,30 @@ const AdminAnalytics = () => {
                     ))}
                 </select>
             </div>
-            <div className={styles.chartsContainer}>
-                <div className={styles.chart}>
-                    <h4>Task Completion Status</h4>
-                    <div style={{ width: '400px', height: '400px' }}>
-                        <Pie data={tasksPieData} />
-                    </div>
-                </div>
-                <div className={styles.chart}>
-                    <h4>File Upload Status</h4>
-                    <div style={{ width: '400px', height: '200px' }}>
-                        <Line data={fileData} />
-                    </div>
-                </div>
-                <div className={styles.chart}>
-                    <h4>Subtasks Completion Status</h4>
-                    <div style={{ width: '400px', height: '400px' }}>
-                        <Pie data={subtasksPieData} />
-                    </div>
-                </div>
-            </div>
+            <table className="chartsTableCustom">
+                <tbody>
+                    <tr>
+                        <td>
+                            <h4>Task Completion Status</h4>
+                            <div style={{ width: '400px', height: '400px' }}>
+                                <Pie data={tasksPieData} />
+                            </div>
+                        </td>
+                        <td>
+                            <h4>File Upload Status</h4>
+                            <div style={{ width: '400px', height: '200px' }}>
+                                <Line data={fileData} />
+                            </div>
+                        </td>
+                        <td>
+                            <h4>Subtasks Completion Status</h4>
+                            <div style={{ width: '400px', height: '400px' }}>
+                                <Pie data={subtasksPieData} />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 };

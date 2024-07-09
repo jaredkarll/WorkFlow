@@ -11,13 +11,13 @@
 }
 
 .chartsContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    display: flex !important;
+    justify-content: space-between !important; /* Ensures space between the charts */
+    flex-direction: row !important; /* Ensures charts are aligned horizontally */
+    flex-wrap: nowrap !important; /* Prevents wrapping to a new line */
 }
 
 .chart {
-    width: 45%;
-    margin-bottom: 20px;
+    flex: 1 !important; /* Ensures each chart takes up equal space */
+    margin: 0 10px !important; /* Adds some margin between the charts */
 }
