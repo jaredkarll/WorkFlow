@@ -84,18 +84,17 @@ const Resources = () => {
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>File Name</th>
                             <th>Link</th>
                             <th>Project</th>
                             <th>Members</th>
+                            <th>Uploader</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {resources.map(resource => (
                             <tr key={resource.id}>
-                                <td>{resource.id}</td>
                                 <td>{resource.filename}</td>
                                 <td>
                                     {resource.link ? (
@@ -110,6 +109,7 @@ const Resources = () => {
                                 </td>
                                 <td>{resource.project_name}</td>
                                 <td>{resource.project_members}</td>
+                                <td>{resource.uploader}</td>
                                 <td>
                                     <button className="editResourceButton" onClick={() => handleEdit(resource)}>Edit</button>
                                     <button className="deleteResourceButton" onClick={() => handleDelete(resource.id)}>Delete</button>

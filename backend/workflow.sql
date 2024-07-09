@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3600
--- Generation Time: Jul 07, 2024 at 03:35 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Host: 127.0.0.1:3307
+-- Generation Time: Jul 09, 2024 at 03:22 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,9 +40,9 @@ CREATE TABLE `announcements` (
 --
 
 INSERT INTO `announcements` (`id`, `title`, `content`, `author_id`, `date`) VALUES
-(1, 'Welcome to MGHS!', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur suscipit dictum justo, eget sollicitudin purus viverra sit amet. Curabitur a eleifend justo, vitae congue turpis. Mauris eget ipsum nibh.', NULL, '2024-06-20 13:50:05'),
 (2, 'Mabuhay mga Kababayan!', 'This is it!', NULL, '2024-06-22 04:53:48'),
-(4, 'Testing 2', 'Calvin Klein', 3, '2024-06-27 14:45:11');
+(3, 'Testing', 'CALL ME KELVIN', 3, '2024-06-27 14:43:38'),
+(4, 'Testing 2', 'Calvin Dog', 3, '2024-06-27 14:45:11');
 
 -- --------------------------------------------------------
 
@@ -53,6 +53,7 @@ INSERT INTO `announcements` (`id`, `title`, `content`, `author_id`, `date`) VALU
 CREATE TABLE `files` (
   `id` int(11) NOT NULL,
   `project_id` int(11) DEFAULT NULL,
+  `uploader_id` int(11) NOT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `filepath` varchar(255) DEFAULT NULL,
   `upload_date` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -64,8 +65,11 @@ CREATE TABLE `files` (
 -- Dumping data for table `files`
 --
 
-INSERT INTO `files` (`id`, `project_id`, `filename`, `filepath`, `upload_date`, `type`, `link`) VALUES
-(24, 2, 'TQP SEO June Report.pdf', '/uploads/TQP SEO June Report.pdf', '2024-07-03 14:23:06', 'file', NULL);
+INSERT INTO `files` (`id`, `project_id`, `uploader_id`, `filename`, `filepath`, `upload_date`, `type`, `link`) VALUES
+(24, 2, 0, 'TQP SEO June Report.pdf', '/uploads/TQP SEO June Report.pdf', '2024-07-03 14:23:06', 'file', NULL),
+(26, 8, 0, 'message (6).txt', '/uploads/message (6).txt', '2024-07-04 14:22:41', 'file', NULL),
+(27, 8, 0, 'photo1716352316.jpeg', '/uploads/photo1716352316.jpeg', '2024-07-04 14:23:16', 'file', NULL),
+(28, 2, 3, 'IMG_20240418_111100.jpg', '/uploads/IMG_20240418_111100.jpg', '2024-07-09 13:21:02', 'file', NULL);
 
 -- --------------------------------------------------------
 
@@ -130,13 +134,12 @@ CREATE TABLE `subtasks` (
 --
 
 INSERT INTO `subtasks` (`id`, `task_id`, `title`, `completed`) VALUES
-(79, 3, 'Create Documentation', 0),
-(80, 3, 'Add Table of Contents', 1),
-(90, 7, 'GitHub Repository', 1),
-(91, 1, 'Wireframe', 1),
-(92, 1, 'Prototyping', 1),
-(93, 1, 'Color Scheme', 1),
-(94, 1, 'Testing', 0);
+(61, 3, 'Create Documentation', 1),
+(62, 3, 'Add Table of Contents', 1),
+(63, 1, 'Wireframe', 1),
+(64, 1, 'Prototyping', 1),
+(65, 1, 'Color Scheme', 1),
+(66, 1, 'Testing', 1);
 
 -- --------------------------------------------------------
 
@@ -158,9 +161,8 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `title`, `assigned_to`, `project_id`, `due_date`, `created_at`) VALUES
-(1, 'UI/UX Design', 'Taylor Swift', 8, '2024-04-19', '2024-06-22 05:06:13'),
-(3, 'Project Documentation', 'Taylor Swift', 2, '2024-06-18', '2024-06-25 14:29:32'),
-(7, 'Project Coding', 'Taylor Swift', 8, '2024-07-06', '2024-07-07 12:59:51');
+(1, 'UI/UX Design', 'Taylor Swift', 8, '2024-04-24', '2024-06-22 05:06:13'),
+(3, 'Project Documentation', 'Taylor Swift', 2, '2024-06-21', '2024-06-25 14:29:32');
 
 -- --------------------------------------------------------
 
@@ -192,7 +194,8 @@ INSERT INTO `users` (`id`, `email`, `first_name`, `last_name`, `password`, `crea
 (15, 'taylor@example.com', 'Taylor', 'Swift', 'password', '2024-06-22 12:26:19', 0),
 (17, 'speaknow@example.com', 'Speak', 'Now', 'password', '2024-06-22 12:26:19', 0),
 (18, 'red@example.com', 'Red', '', 'password', '2024-06-22 12:26:19', 0),
-(20, 'adsa@ytyt.com', 'sas', 'adsas', 'asd', '2024-06-29 14:38:47', 1);
+(20, 'adsa@ytyt.com', 'sas', 'adsas', 'asd', '2024-06-29 14:38:47', 1),
+(23, 'hatdogmaster69@gmail.com', 'hatdog', 'master', '1234', '2024-07-04 14:21:10', 0);
 
 --
 -- Indexes for dumped tables
@@ -253,13 +256,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -277,19 +280,19 @@ ALTER TABLE `project_members`
 -- AUTO_INCREMENT for table `subtasks`
 --
 ALTER TABLE `subtasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- Constraints for dumped tables

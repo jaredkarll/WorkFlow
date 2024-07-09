@@ -45,16 +45,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.post('/upload', upload.single('file'), (req, res) => {
-    const { projectId, link } = req.body;
 
-    if (!projectId) {
-        return res.status(400).json({ message: 'Project ID is required' });
+app.post('/upload', upload.single('file'), (req, res) => {
+    const { projectId, link, uploaderId } = req.body; // Make sure to pass the uploaderId
+
+    if (!projectId || !uploaderId) {
+        return res.status(400).json({ message: 'Project ID and Uploader ID are required' });
     }
 
     if (link) {
-        const query = 'INSERT INTO files (project_id, type, link) VALUES (?, ?, ?)';
-        connectDB.query(query, [projectId, 'link', link], (err, result) => {
+        const query = 'INSERT INTO files (project_id, uploader_id, type, link) VALUES (?, ?, ?, ?)';
+        connectDB.query(query, [projectId, uploaderId, 'link', link], (err, result) => {
             if (err) {
                 console.error('Error storing link metadata in database:', err);
                 return res.status(500).json({ message: 'Error storing link metadata' });
@@ -65,8 +66,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
         const filePath = `/uploads/${req.file.filename}`;
         const filename = req.file.filename;
 
-        const query = 'INSERT INTO files (project_id, type, filename, filepath) VALUES (?, ?, ?, ?)';
-        connectDB.query(query, [projectId, 'file', filename, filePath], (err, result) => {
+        const query = 'INSERT INTO files (project_id, uploader_id, type, filename, filepath) VALUES (?, ?, ?, ?, ?)';
+        connectDB.query(query, [projectId, uploaderId, 'file', filename, filePath], (err, result) => {
             if (err) {
                 console.error('Error storing file metadata in database:', err);
                 return res.status(500).json({ message: 'Error storing file metadata' });
@@ -81,7 +82,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.get('/resources', (req, res) => {
     const query = `
         SELECT f.id, f.filename, f.filepath, f.link, f.upload_date, p.name as project_name,
-               GROUP_CONCAT(CONCAT(u.first_name, ' ', u.last_name)) as project_members
+               GROUP_CONCAT(CONCAT(u.first_name, ' ', u.last_name)) as project_members,
+               (SELECT CONCAT(u2.first_name, ' ', u2.last_name) FROM users u2 WHERE u2.id = f.uploader_id) as uploader
         FROM files f
         JOIN projects p ON f.project_id = p.id
         JOIN project_members pm ON p.id = pm.project_id

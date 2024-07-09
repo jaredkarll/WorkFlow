@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, TextField, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 import axios from 'axios';
+import AuthContext from '../AuthContext'; // Import AuthContext
 
 const UploadForm = ({ onSuccess }) => {
+    const { user } = useContext(AuthContext); // Use AuthContext to get logged-in user
     const [uploadType, setUploadType] = useState('file');
     const [file, setFile] = useState(null);
     const [link, setLink] = useState('');
@@ -45,6 +47,7 @@ const UploadForm = ({ onSuccess }) => {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('projectId', selectedProjectId);
+            formData.append('uploaderId', user.id); // Include uploaderId
 
             axios.post('http://localhost:8800/upload', formData, {
                 headers: {
@@ -61,7 +64,7 @@ const UploadForm = ({ onSuccess }) => {
                     alert('Error uploading file');
                 });
         } else if (uploadType === 'link' && link) {
-            axios.post('http://localhost:8800/upload', { link, projectId: selectedProjectId })
+            axios.post('http://localhost:8800/upload', { link, projectId: selectedProjectId, uploaderId: user.id }) // Include uploaderId
                 .then(response => {
                     alert('Link submitted successfully');
                     onSuccess();
