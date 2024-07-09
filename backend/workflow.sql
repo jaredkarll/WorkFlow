@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Jul 09, 2024 at 03:22 PM
+-- Generation Time: Jul 09, 2024 at 04:10 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -69,7 +69,10 @@ INSERT INTO `files` (`id`, `project_id`, `uploader_id`, `filename`, `filepath`, 
 (24, 2, 0, 'TQP SEO June Report.pdf', '/uploads/TQP SEO June Report.pdf', '2024-07-03 14:23:06', 'file', NULL),
 (26, 8, 0, 'message (6).txt', '/uploads/message (6).txt', '2024-07-04 14:22:41', 'file', NULL),
 (27, 8, 0, 'photo1716352316.jpeg', '/uploads/photo1716352316.jpeg', '2024-07-04 14:23:16', 'file', NULL),
-(28, 2, 3, 'IMG_20240418_111100.jpg', '/uploads/IMG_20240418_111100.jpg', '2024-07-09 13:21:02', 'file', NULL);
+(28, 2, 3, 'IMG_20240418_111100.jpg', '/uploads/IMG_20240418_111100.jpg', '2024-07-09 13:21:02', 'file', NULL),
+(29, 8, 18, 'photo1719278994 (2).jpeg', '/uploads/photo1719278994 (2).jpeg', '2024-07-09 13:51:57', 'file', NULL),
+(30, 8, 18, 'photo1719278420.jpeg', '/uploads/photo1719278420.jpeg', '2024-07-09 13:56:52', 'file', NULL),
+(31, 2, 18, 'IMG_20240418_111100.jpg', '/uploads/IMG_20240418_111100.jpg', '2024-07-09 13:57:07', 'file', NULL);
 
 -- --------------------------------------------------------
 
@@ -110,11 +113,12 @@ CREATE TABLE `project_members` (
 --
 
 INSERT INTO `project_members` (`id`, `project_id`, `user_id`) VALUES
-(63, 8, 8),
-(64, 8, 4),
 (69, 2, 11),
 (70, 2, 3),
-(71, 2, 18);
+(71, 2, 18),
+(72, 8, 8),
+(73, 8, 4),
+(74, 8, 18);
 
 -- --------------------------------------------------------
 
@@ -262,7 +266,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -274,7 +278,7 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `project_members`
 --
 ALTER TABLE `project_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `subtasks`

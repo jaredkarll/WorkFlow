@@ -47,7 +47,7 @@ const upload = multer({ storage });
 
 
 app.post('/upload', upload.single('file'), (req, res) => {
-    const { projectId, link, uploaderId } = req.body; // Make sure to pass the uploaderId
+    const { projectId, link, uploaderId } = req.body;
 
     if (!projectId || !uploaderId) {
         return res.status(400).json({ message: 'Project ID and Uploader ID are required' });
@@ -80,24 +80,36 @@ app.post('/upload', upload.single('file'), (req, res) => {
 });
 
 app.get('/resources', (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+
     const query = `
         SELECT f.id, f.filename, f.filepath, f.link, f.upload_date, p.name as project_name,
-               GROUP_CONCAT(CONCAT(u.first_name, ' ', u.last_name)) as project_members,
-               (SELECT CONCAT(u2.first_name, ' ', u2.last_name) FROM users u2 WHERE u2.id = f.uploader_id) as uploader
+               GROUP_CONCAT(DISTINCT CONCAT(u.first_name, ' ', u.last_name) SEPARATOR ', ') as project_members,
+               CONCAT(uploader.first_name, ' ', uploader.last_name) as uploader
         FROM files f
         JOIN projects p ON f.project_id = p.id
         JOIN project_members pm ON p.id = pm.project_id
         JOIN users u ON pm.user_id = u.id
-        GROUP BY f.id;
+        JOIN users uploader ON f.uploader_id = uploader.id
+        WHERE p.id IN (
+                    SELECT project_id FROM project_members WHERE user_id = ?
+                )
+        GROUP BY f.id, f.filename, f.filepath, f.link, f.upload_date, p.name, uploader.first_name, uploader.last_name;
     `;
-    connectDB.query(query, (err, results) => {
+    connectDB.query(query, [userId], (err, results) => {
         if (err) {
             console.error('Error fetching resources:', err);
             return res.status(500).json({ message: 'Error fetching resources' });
         }
+        console.log('Fetched resources:', results);
         res.status(200).json(results);
     });
 });
+
 
 app.delete('/resources/:id', (req, res) => {
     const fileId = req.params.id;
@@ -599,6 +611,36 @@ app.get('/projects/:id', (req, res) => {
         res.status(200).json(project);
     });
 });
+
+// Endpoint to fetch projects for a specific user
+app.get('/user-projects', (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        console.log('User ID is missing');
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    console.log('Fetching projects for user ID:', userId);
+
+    const query = `
+        SELECT p.id, p.name
+        FROM projects p
+        JOIN project_members pm ON p.id = pm.project_id
+        WHERE pm.user_id = ?
+        GROUP BY p.id, p.name;
+    `;
+    connectDB.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching projects:', err);
+            return res.status(500).json({ message: 'Error fetching projects' });
+        }
+
+        console.log('Fetched projects:', results);
+        res.status(200).json(results);
+    });
+});
+
 
 // Endpoint to edit a project
 app.put('/projects/:id', (req, res) => {

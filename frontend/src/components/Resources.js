@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import '../styles/Resources.css';
 import UploadForm from '../pages/UploadForm';
+import AuthContext from '../AuthContext';
 
 const Resources = () => {
+    const { user } = useContext(AuthContext);
     const [resources, setResources] = useState([]);
     const [projects, setProjects] = useState([]);
     const [editResource, setEditResource] = useState(null);
@@ -11,13 +13,16 @@ const Resources = () => {
     const [editLink, setEditLink] = useState('');
 
     useEffect(() => {
-        fetchResources();
-        fetchProjects();
-    }, []);
+        if (user) {
+            fetchResources(user.id);
+            fetchProjects();
+        }
+    }, [user]);
 
-    const fetchResources = () => {
-        axios.get('http://localhost:8800/resources')
+    const fetchResources = (userId) => {
+        axios.get(`http://localhost:8800/resources?userId=${userId}`)
             .then(response => {
+                console.log('Fetched resources:', response.data);
                 setResources(response.data);
             })
             .catch(error => {
@@ -49,7 +54,7 @@ const Resources = () => {
         axios.put(`http://localhost:8800/resources/${editResource.id}`, payload)
             .then(response => {
                 setEditResource(null);
-                fetchResources();
+                fetchResources(user.id);
             })
             .catch(error => {
                 console.error('Error updating resource:', error);
@@ -61,7 +66,7 @@ const Resources = () => {
         if (confirmDelete) {
             axios.delete(`http://localhost:8800/resources/${id}`)
                 .then(() => {
-                    fetchResources();
+                    fetchResources(user.id);
                 })
                 .catch(error => {
                     console.error('Error deleting resource:', error);
@@ -70,7 +75,7 @@ const Resources = () => {
     };
 
     const handleUploadSuccess = () => {
-        fetchResources();
+        fetchResources(user.id);
     };
 
     return (

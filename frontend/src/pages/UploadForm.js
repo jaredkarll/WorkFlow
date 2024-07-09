@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, TextField, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 import axios from 'axios';
-import AuthContext from '../AuthContext'; // Import AuthContext
+import AuthContext from '../AuthContext';
 
 const UploadForm = ({ onSuccess }) => {
-    const { user } = useContext(AuthContext); // Use AuthContext to get logged-in user
+    const { user } = useContext(AuthContext);
     const [uploadType, setUploadType] = useState('file');
     const [file, setFile] = useState(null);
     const [link, setLink] = useState('');
@@ -12,15 +12,20 @@ const UploadForm = ({ onSuccess }) => {
     const [selectedProjectId, setSelectedProjectId] = useState('');
 
     useEffect(() => {
-        // Fetch projects to populate the dropdown
-        axios.get('http://localhost:8800/projects')
+        if (user) {
+            fetchProjects(user.id);
+        }
+    }, [user]);
+
+    const fetchProjects = (userId) => {
+        axios.get(`http://localhost:8800/user-projects?userId=${userId}`)
             .then(response => {
                 setProjects(response.data);
             })
             .catch(error => {
                 console.error('Error fetching projects:', error);
             });
-    }, []);
+    };
 
     const handleInputChange = (event) => {
         if (uploadType === 'file') {
@@ -47,7 +52,7 @@ const UploadForm = ({ onSuccess }) => {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('projectId', selectedProjectId);
-            formData.append('uploaderId', user.id); // Include uploaderId
+            formData.append('uploaderId', user.id);
 
             axios.post('http://localhost:8800/upload', formData, {
                 headers: {
@@ -64,7 +69,7 @@ const UploadForm = ({ onSuccess }) => {
                     alert('Error uploading file');
                 });
         } else if (uploadType === 'link' && link) {
-            axios.post('http://localhost:8800/upload', { link, projectId: selectedProjectId, uploaderId: user.id }) // Include uploaderId
+            axios.post('http://localhost:8800/upload', { link, projectId: selectedProjectId, uploaderId: user.id })
                 .then(response => {
                     alert('Link submitted successfully');
                     onSuccess();
