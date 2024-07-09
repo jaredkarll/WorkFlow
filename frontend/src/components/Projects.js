@@ -27,10 +27,16 @@ const Projects = () => {
         setShowCreateProject(true);
     };
 
-    const handleCloseCreateProject = (newProject) => {
+    const handleCloseCreateProject = async (newProject) => {
         setShowCreateProject(false);
         if (newProject) {
-            setProjects([...projects, newProject]);
+            try {
+                const response = await axios.get(`http://localhost:8800/projects/${newProject.id}`);
+                const updatedProject = response.data;
+                setProjects([...projects, updatedProject]);
+            } catch (error) {
+                console.error('Error fetching new project details:', error);
+            }
         }
     };
 

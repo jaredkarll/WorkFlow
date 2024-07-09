@@ -734,6 +734,57 @@ app.get('/users', (req, res) => {
     });
 });
 
+// Endpoint to create a new project
+app.post('/projects', (req, res) => {
+    const { name, progress, goals, methodology, members } = req.body;
+
+    if (!name || !goals || !methodology || !Array.isArray(members)) {
+        return res.status(400).json({ message: 'Invalid project data' });
+    }
+
+    connectDB.getConnection((err, connection) => {
+        if (err) {
+            console.error('Database connection failed:', err);
+            return res.status(500).json({ message: 'Database connection failed' });
+        }
+
+        const createProjectQuery = 'INSERT INTO projects (name, progress, goals, methodology) VALUES (?, ?, ?, ?)';
+        connection.query(createProjectQuery, [name, progress, goals, methodology], (projectError, projectResults) => {
+            if (projectError) {
+                connection.release();
+                console.error('Project creation failed:', projectError);
+                return res.status(500).json({ message: 'Project creation failed' });
+            }
+
+            const projectId = projectResults.insertId;
+            const memberQueries = members.map(memberId => {
+                return new Promise((resolve, reject) => {
+                    const addMemberQuery = 'INSERT INTO project_members (project_id, user_id) VALUES (?, ?)';
+                    connection.query(addMemberQuery, [projectId, memberId], (memberError) => {
+                        if (memberError) {
+                            reject(memberError);
+                        } else {
+                            resolve();
+                        }
+                    });
+                });
+            });
+
+            Promise.all(memberQueries)
+                .then(() => {
+                    connection.release();
+                    res.status(201).json({ id: projectId, name, progress, goals, methodology, members });
+                })
+                .catch(memberError => {
+                    connection.release();
+                    console.error('Project member addition failed:', memberError);
+                    res.status(500).json({ message: 'Project member addition failed' });
+                });
+        });
+    });
+});
+
+
 // Endpoint to create a new user (admin only)
 app.post('/createuser', (req, res) => {
     const { firstName, lastName, email, password, isAdmin, userId } = req.body;
