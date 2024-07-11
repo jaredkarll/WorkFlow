@@ -27,27 +27,33 @@ function Navbar() {
     return (
         <div className="navbar">
             <div className="leftSide" id={openLinks ? "open" : "close"}>
-                <img src={Logo} alt="SafeZone Logo" />
+                <img src={Logo} alt="WorkFlow Logo" />
                 <div className="hiddenLinks">
                     <Link to="/"> Home </Link>
-                    {isLoggedIn && <Link to="/contact"> Profile </Link>}
+                    {isLoggedIn && <Link to="/userdashboard"> Dashboard </Link>}
+                    {isLoggedIn && <Link to="/profile"> Profile </Link>}
+                    {location.pathname !== "/login" && (
+                        <button
+                            className={isLoggedIn ? "loggedInButton" : "signupButton"}
+                            onClick={handleAuthButtonClick}
+                        >
+                            {isLoggedIn ? "Logout" : location.pathname === "/login" ? "Signup" : "Login"}
+                        </button>
+                    )}
+                </div>
+            </div>
+            <div className="rightSide">
+                <Link to="/"> Home </Link>
+                {isLoggedIn && <Link to="/userdashboard"> Dashboard </Link>}
+                {isLoggedIn && <Link to="/profile"> Profile </Link>}
+                {location.pathname !== "/login" && (
                     <button
                         className={isLoggedIn ? "loggedInButton" : "signupButton"}
                         onClick={handleAuthButtonClick}
                     >
                         {isLoggedIn ? "Logout" : location.pathname === "/login" ? "Signup" : "Login"}
                     </button>
-                </div>
-            </div>
-            <div className="rightSide">
-                <Link to="/"> Home </Link>
-                {isLoggedIn && <Link to="/profile"> Profile </Link>}
-                <button
-                    className={isLoggedIn ? "loggedInButton" : "signupButton"}
-                    onClick={handleAuthButtonClick}
-                >
-                    {isLoggedIn ? "Logout" : location.pathname === "/login" ? "Signup" : "Login"}
-                </button>
+                )}
                 <button onClick={toggleNavbar}>
                     <ReorderIcon />
                 </button>
