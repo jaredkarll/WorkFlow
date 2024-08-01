@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import AuthContext from '../AuthContext';
 
 const EditUserForm = ({ userData }) => {
+    const { user } = useContext(AuthContext); // Assuming you have AuthContext for user data
     const [firstName, setFirstName] = useState(userData.first_name);
     const [lastName, setLastName] = useState(userData.last_name);
     const [email, setEmail] = useState(userData.email);
@@ -22,6 +24,7 @@ const EditUserForm = ({ userData }) => {
                 lastName,
                 email,
                 isAdmin,
+                userId: user.id // Sending the admin's user ID for verification
             });
             alert('User updated successfully');
         } catch (error) {

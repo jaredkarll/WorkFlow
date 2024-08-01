@@ -3,7 +3,7 @@ import '../styles/ProfilePage.css';
 import AuthContext from '../AuthContext'; // Import AuthContext
 
 const ProfilePage = () => {
-    const { user, setUser } = useContext(AuthContext);
+    const { user, login } = useContext(AuthContext); // Use login instead of setUser
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -29,10 +29,26 @@ const ProfilePage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            setUser({ ...user, ...formData });
+            const response = await fetch(`http://localhost:8800/updateprofile/${user.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to update profile: ${response.status} ${errorText}`);
+            }
+
+            const updatedUser = await response.json();
+            login(updatedUser); // Use login to update user data and local storage
             setEditMode(false);
+            alert('Profile updated successfully');
         } catch (error) {
             console.error('Error updating profile:', error);
+            alert('Failed to update profile: ' + error.message);
         }
     };
 
